@@ -14,16 +14,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'pet-qrcode'`, () => {
+  it(`should have as title 'tag-my-pet'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('pet-qrcode');
+    expect(app.title).toEqual('tag-my-pet');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('pet-qrcode app is running!');
+    expect(compiled.querySelector('.content span')?.textContent).toContain('tag-my-pet app is running!');
   });
 });
