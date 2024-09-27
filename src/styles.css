@@ -1,0 +1,30 @@
+:root {
+  --primary-color: #1f1f29;
+  --primary-lighter: #2b2b3d;
+  --green: #2fb145;
+  --gray: #323232;
+  --transGray: #dbdbdb;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0 auto;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

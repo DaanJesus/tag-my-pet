@@ -1,0 +1,50 @@
+.svg-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+}
+
+div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 0 0 0;
+
+    h2 {
+        color: rgb(99, 99, 99);
+
+    }
+
+    p {
+        font-size: 25px;
+        color: rgb(99, 99, 99);
+
+        a {
+            text-decoration: none;
+        }
+    }
+}
+
+
+
+svg#freepik_stories-404-error-with-a-cute-animal:not(.animated) .animable {
+    opacity: 0;
+}
+
+svg#freepik_stories-404-error-with-a-cute-animal.animated #freepik--404-error--inject-2 {
+    animation: 1s 1 forwards cubic-bezier(.36, -0.01, .5, 1.38) fadeIn;
+    animation-delay: 0s;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}

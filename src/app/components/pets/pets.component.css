@@ -1,0 +1,182 @@
+.content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+
+.card-pet {
+    width: calc(50% - 15px);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    background-color: white;
+    border: 2px solid #37b43d;
+    padding: 3px;
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.card-pet:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+}
+
+.top-section {
+    width: 100%;
+    height: 100px;
+    background-color: #f3f3f3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pet-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+}
+
+.middle-floating-img {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.floating-photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid white;
+    object-fit: cover;
+    background-color: #fff;
+}
+
+.bottom-section {
+    padding: 40px 10px 10px 10px;
+    text-align: center;
+    width: 100%;
+}
+
+.bottom-section h3 {
+    margin: 10px 0;
+    font-weight: bold;
+    color: #636363;
+}
+
+.pet-details p {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+}
+
+.label {
+    font-weight: bold;
+    color: #636363;
+}
+
+.value {
+    text-align: right;
+    color: #636363;
+    font-size: 13px;
+}
+
+.add-btn {
+    position: absolute;
+    font-size: 20px;
+    height: 60px;
+    width: 60px;
+    background-color: var(--green);
+    color: white !important;
+    bottom: 20px;
+    right: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    cursor: pointer;
+    transition: width 0.3s ease, border-radius 0.3s ease;
+}
+
+.add-btn i {
+    transition: transform 0.3s ease;
+}
+
+.add-btn span {
+    display: none;
+}
+
+@media (min-width: 541px) {
+    .add-btn:hover {
+        width: 300px;
+        border-radius: 8px;
+    }
+
+    .add-btn:hover i {
+        transform: rotate(360deg);
+    }
+
+    .add-btn:hover span {
+        margin-left: 10px;
+        display: inline;
+    }
+}
+
+@media (max-width: 540px) {
+
+    .add-btn {
+        position: fixed;
+        font-size: 20px;
+        height: 50px;
+        background-color: var(--green);
+        border-radius: 8px;
+        color: white !important;
+        bottom: 0;
+        left: 0;
+        width: calc(100% - 30px);
+        margin: 0 15px 15px 15px;
+    }
+
+    .add-btn span {
+        display: inline;
+        margin-left: 10px;
+    }
+
+    .card-header h4 {
+        font-size: 16px;
+    }
+
+    .card-header button {
+        margin-top: 8px;
+        font-size: 14px;
+    }
+
+    .grid-list {
+        display: flex;
+        gap: 10px;
+        align-content: flex-start;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .card-pet {
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+
+        h6 {
+            font-size: 16px;
+        }
+    }
+
+}
+
+@media (max-width: 768px) {}

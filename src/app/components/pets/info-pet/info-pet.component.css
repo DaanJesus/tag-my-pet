@@ -1,0 +1,72 @@
+.card-pet {
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    border-bottom: 1px solid #e2e2e2;
+    padding-bottom: 20px;
+    width: 100% !important;
+
+    .photo {
+        height: 70px;
+        width: 70px;
+        border-radius: 100%;
+    }
+
+}
+
+.content-header {
+    display: flex;
+    flex-direction: column;
+
+    h2,
+    h3 {
+        margin: 0;
+    }
+}
+
+.pet-info h4 {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+    margin: 10px 0;
+    font-weight: bold;
+    font-size: 14px;
+
+    span {
+        font-weight: normal;
+        font-size: 14px;
+    }
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .btn {
+        width: 500px;
+        height: 40px;
+    }
+
+    .update {
+        border: 1px solid var(--green);
+        color: #303030 !important;
+    }
+
+    .delete {
+        color: red;
+    }
+}
+
+@media (max-width: 768px) {
+    .actions {
+        .btn {
+            width: 300px;
+        }
+    }
+}

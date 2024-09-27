@@ -1,0 +1,33 @@
+<div class="content">
+    <div class="header">
+        <!-- <h4>Que ótimo! Conseguimos cadastrar {{ data.sex === 'Macho' ? 'o' : 'a' }}
+            <span style="font-weight: bold;">{{data.name}}</span> com sucesso.
+        </h4> -->
+        <h1 style="color: var(--green); font-weight: bold;">
+            Sucesso!
+        </h1>
+    </div>
+
+    <div class="body">
+        <div class="qrcode">
+            <img [src]="data.qrCode" alt="qrcode">
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Este é o QRCode {{ data.sex === 'Macho' ? 'do seu companheiro' : 'da sua companheira' }}.</p>
+
+        <p>
+            Para garantir que
+            {{ data.sex === 'Macho' ? 'ele' : 'ela' }} possa ser {{ data.sex === 'Macho' ? 'identificado' :
+            'identificada'
+            }} rapidamente.
+        </p>
+
+        <p style="font-size: 12px;"><!-- <i class='bx bxs-bulb' style="font-size: 14px;"></i> -->Dica: Recomendamos que
+            você imprima este código e o
+            coloque na coleira
+            {{data.sex === 'Macho' ? 'do seu amiguinho' : 'da sua amiguinha' }} de quatro patas.</p>
+
+    </div>
+</div>

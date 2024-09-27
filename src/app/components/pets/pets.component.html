@@ -1,0 +1,35 @@
+<!-- <div class="content">
+    <div class="grid-list">
+        <div class="card-pet" >
+            <img >
+            <h6></h6>
+        </div>
+    </div>
+    <button mat-button class="add-btn" (click)="addNewPet()">Cadastrar Pet</button>
+</div> -->
+
+<div class="content">
+    <div class="card-pet" *ngFor="let pet of pets" (click)="viewInfoPet(pet)">
+        <div class="top-section">
+            <img [src]="pet.photo" alt="Pet Photo" class="pet-photo">
+        </div>
+        <div class="middle-floating-img">
+            <img [src]="pet.photo" alt="Pet Floating Photo" class="floating-photo">
+        </div>
+        <div class="bottom-section">
+            <h3>{{pet.name}}</h3>
+            <div class="pet-details">
+                <p>
+                    <span class="label">Idade:</span>
+                    <span class="value">{{ calculateAge(pet.birthDate) }}</span>
+                </p>
+                <p>
+                    <span class="label">Raça:</span>
+                    <span class="value">{{ pet.breed }}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+</div>
+<button mat-button class="add-btn" (click)="addNewPet()"><i class="fa-solid fa-plus"></i><span>Adicionar Novo Pet</span></button>

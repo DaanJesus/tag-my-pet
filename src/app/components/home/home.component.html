@@ -1,0 +1,60 @@
+<div class="feed-content">
+    <div class="post-composer">
+        <span class="avatar"></span>
+        <div class="composer-content">
+            <mat-form-field appearance="outline">
+                <mat-label>Como está seu pet hoje?</mat-label>
+                <textarea matInput rows="2"></textarea>
+            </mat-form-field>
+            <div class="composer-actions">
+                <button mat-button class="post-btn">Publicar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="timeline">
+        <div class="post" *ngFor="let post of posts">
+            <span class="avatar"></span>
+            <div class="post-content">
+                <div class="post-header">
+                    <div>
+                        <span class="username">{{post.name}}</span>
+                        <span class="user-handle" style="color: rgb(143, 143, 143);">&#64;{{post.tag}}</span>
+                    </div>
+                    <span class="post-time">{{post.timestamp | date: "HH:mm"}}</span>
+                </div>
+                <p class="post-text">{{post.textPost}}</p>
+                <a href="#" class="post-tags">#{{post.hashtag}}</a>
+                <div class="post-actions">
+                    <button mat-button class="like-btn">Curtir</button>
+                    <button mat-button class="share-btn">Compartilhar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="post">
+            <span class="avatar"></span>
+            <div class="post-content">
+                <div class="post-header">
+                    <div>
+                        <span class="username">Username</span>
+                        <span class="user-handle"
+                            style="color: rgb(143, 143, 143);">&#64;username</span>
+                    </div>
+                    <span class="post-time">Just now</span>
+                </div>
+                <p class="post-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                    eiusmod
+                    tempor incididunt ut labore et dolore magna aliqua.
+                </p>
+                <a href="#">#hashtag</a>
+                <img class="post-image" src="../../../assets/background_animal.png" alt="">
+                <div class="post-actions">
+                    <button mat-button class="like-btn">Curtir</button>
+                    <button mat-button class="share-btn">Compartilhar</button>
+                </div>
+            </div>
+        </div> -->
+
+    </div>
+</div>
