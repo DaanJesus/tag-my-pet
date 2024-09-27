@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DialogPet } from '../pets.component';
+import { Pet } from 'src/app/models/Pet';
 
 @Component({
   selector: 'app-confirma-dialog',
@@ -13,6 +13,6 @@ export class ConfirmaDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<ConfirmaDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogPet
+    @Inject(MAT_DIALOG_DATA) public data: Pet
   ) { }
 }

@@ -7,20 +7,8 @@ import { InfoPetComponent } from './info-pet/info-pet.component';
 import { PetService } from 'src/app/services/pet.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ConfirmaDialogComponent } from './confirma-dialog/confirma-dialog.component';
-
-export interface DialogPet {
-  type: string,
-  breed: string,
-  birthDate: string,
-  furColor: string,
-  weight: string,
-  name: string,
-  photo: string,
-  sex: string,
-  medicalInfo: string,
-  castrated: string,
-  qrCode: string,
-}
+import { Pet } from 'src/app/models/Pet';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-pets',
@@ -36,26 +24,29 @@ export class PetsComponent implements OnInit, AfterViewInit {
     private cdr: ChangeDetectorRef
   ) { }
 
-  pets: any = [];
+  pets: Pet[] = [];
+  subscription: Subscription = new Subscription();
 
   ngOnInit(): void {
-    this.authService.getCurrentUserId().subscribe(user => {
+    // Criando a assinatura e adicionando-a à subscription
+    const userSubscription = this.authService.getCurrentUserId().subscribe(user => {
       if (user) {
-        this.petService.getMyPets(user).subscribe(res => {
+        const petsSubscription = this.petService.getMyPets(user).subscribe(res => {
           if (res) {
-            setTimeout(() => {
-              this.pets = res;
-            });
+            this.pets = res;
           }
         });
+        this.subscription.add(petsSubscription); // Adicionando a assinatura de pets ao subscription
       }
     });
+
+    this.subscription.add(userSubscription); // Adicionando a assinatura de usuário ao subscription
   }
 
   ngAfterViewInit(): void {
     const dialogWidth = window.innerWidth < 768 ? '100%' : '400px'
 
-    this.dialog.open(ConfirmaDialogComponent, {
+    /* this.dialog.open(ConfirmaDialogComponent, {
       width: dialogWidth,
       data: {
         "_id": "66ef24a322f80dc9ebccd6d8",
@@ -75,11 +66,11 @@ export class PetsComponent implements OnInit, AfterViewInit {
         "mentor": "66cda445335393eacefb8e7a",
         "__v": 0
       }
-    })
+    }) */
 
   }
 
-  viewInfoPet(pet: DialogPet) {
+  viewInfoPet(pet: Pet) {
     this.dialog.open(InfoPetComponent, {
       data: pet
     });
@@ -92,7 +83,7 @@ export class PetsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  calculateAge(birthDate: string): string {
+  calculateAge(birthDate: Date): string {
     const birth = new Date(birthDate);
     const today = new Date();
     const diffTime = today.getTime() - birth.getTime();
@@ -112,6 +103,10 @@ export class PetsComponent implements OnInit, AfterViewInit {
 
     const ageDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
     return ageDays < 30 ? 'Menos de 1 mês' : `${ageMonths} meses`;
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
 }

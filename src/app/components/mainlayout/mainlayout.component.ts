@@ -35,16 +35,7 @@ export class MainlayoutComponent implements OnInit, AfterViewInit {
   ];
 
   posts: any = [];
-  pet: any = [
-    {
-      name: "Luna",
-      breed: "Siamês",
-      age: "6 meses",
-      photo: "",
-      medicalInfo: "Vacinada",
-      qrCode: ""
-    }
-  ];
+  pet: any = [];
 
   ngOnInit(): void {
 
@@ -64,7 +55,7 @@ export class MainlayoutComponent implements OnInit, AfterViewInit {
     const currentPage = this.router.url
     const activeMenuItem = this.menu.find((item: { url: string; }) => item.url === currentPage);
     this.title = activeMenuItem ? activeMenuItem.title : 'Início'
-    this.sub_title = activeMenuItem.sub_title
+    /* this.sub_title = activeMenuItem.sub_title */
 
   }
 

@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
-import { DialogPet } from '../pets.component';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormPetComponent } from '../form-pet/form-pet.component';
+import { Pet } from 'src/app/models/Pet';
 
 @Component({
   selector: 'app-info-pet',
@@ -13,7 +13,7 @@ export class InfoPetComponent {
   constructor(
     public dialog: MatDialog,
     public dialogRef: MatDialogRef<FormPetComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogPet
+    @Inject(MAT_DIALOG_DATA) public data: Pet
   ) { }
 
   updatePet(pet: any) {

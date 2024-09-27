@@ -3,21 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { HttpService } from './http.service';
 import { environment } from 'src/environments/environment';
-
-interface Pet {
-  _id: string,
-  type: string,
-  breed: string,
-  birthDate: Date,
-  furColor: string,
-  weight: number,
-  name: string,
-  photo: string,
-  sex: string,
-  medicalInfo: string,
-  castrated: string,
-  qrCode: string,
-}
+import { Pet } from '../models/Pet';
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +45,7 @@ export class PetService extends HttpService {
       )
   }
 
-  getMyPets(userId: string): Observable<Pet> {
+  getMyPets(userId: string): Observable<Pet[]> {
     return this.http.get<Pet>(`${this.apiUrl}/my-pets/${userId}`, { ...this.getHttOptions(), observe: 'body' })
       .pipe(
         tap((data: any) => {

@@ -1,12 +1,12 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DialogPet } from '../pets.component';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSelect } from '@angular/material/select';
 import { PetService } from 'src/app/services/pet.service';
 import * as QRCode from 'qrcode';
 import { ConfirmaDialogComponent } from '../confirma-dialog/confirma-dialog.component';
 import { AuthService } from 'src/app/services/auth.service';
+import { Pet } from 'src/app/models/Pet';
 
 @Component({
   selector: 'app-form-pet',
@@ -22,7 +22,7 @@ export class FormPetComponent implements OnInit, AfterViewInit {
     private petService: PetService,
     private authService: AuthService,
     private cdr: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: DialogPet
+    @Inject(MAT_DIALOG_DATA) public data: Pet
   ) {
     this.formPet = this.fb.group({
       type: ['Gato', Validators.required],
@@ -55,7 +55,7 @@ export class FormPetComponent implements OnInit, AfterViewInit {
 
   qrCodeUrl = ''
 
-  dialogWidth = window.innerWidth < 768 ? '400px' : '200px';
+  dialogWidth = window.innerWidth < 768 ? '100%' : '400px'
 
   ngOnInit() {
     this.filteredTypes = this.options;
@@ -90,6 +90,9 @@ export class FormPetComponent implements OnInit, AfterViewInit {
         });
       });
     }
+
+    console.log(this.dialogWidth);
+    
   }
 
   nextStep() {
