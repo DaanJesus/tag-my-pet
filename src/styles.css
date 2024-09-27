@@ -16,14 +16,13 @@
   box-sizing: border-box;
 }
 
-:is(html),
-:is(body) {
-  height: 100dvh;
-}
-
 :is(body) {
   margin: 0 auto;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+:is(app-root) {
+  height: 100dvh;
 }
