@@ -16,7 +16,7 @@
   box-sizing: border-box;
 }
 
-html,
+:is(html),
 :is(body) {
   height: 100%;
 }
@@ -26,5 +26,13 @@ html,
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
-html, :is(body) { height: 100%; }
-:is(body) { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+:is(html),
+:is(body) {
+  height: 100%;
+}
+
+:is(body) {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
