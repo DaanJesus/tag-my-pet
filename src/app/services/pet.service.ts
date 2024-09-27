@@ -2,6 +2,7 @@ import { EventEmitter, Injectable, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { HttpService } from './http.service';
+import { environment } from 'src/environments/environment';
 
 interface Pet {
   _id: string,
@@ -24,7 +25,7 @@ interface Pet {
 export class PetService extends HttpService {
   @Output()
   event: EventEmitter<any> = new EventEmitter<any>();
-  private apiUrl = 'http://localhost:5000/api/pets'; // URL da API
+  private apiUrl = `${environment.apiUrl}/pets`
 
   constructor(private http: HttpClient) {
     super()
