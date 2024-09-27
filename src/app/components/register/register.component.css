@@ -14,7 +14,7 @@
   left: 0;
 }
 
-.signin-signup {
+.signin-signu:is(p) {
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -94,7 +94,7 @@ form.sign-in-form {
   font-size: 1rem;
 }
 
-.social-media {
+.social-medi:is(a) {
   display: flex;
   justify-content: center;
 }
@@ -196,13 +196,13 @@ form.sign-in-form {
   transition-delay: 0.6s;
 }
 
-.panel h3 {
+.panel :is(h3) {
   font-weight: 600;
   line-height: 1;
   font-size: 1.5rem;
 }
 
-.panel p {
+.panel :is(p) {
   font-size: 0.95rem;
   padding: 0.7rem 0;
 }
@@ -234,7 +234,7 @@ form.sign-in-form {
   transform: translateX(-800px);
 }
 
-.container.sign-up-mode .signin-signup {
+.container.sign-up-mode .signin-signu:is(p) {
   left: 25%;
 }
 
@@ -266,7 +266,7 @@ form.sign-in-form {
     height: 100vh;
   }
 
-  .signin-signup {
+  .signin-signu:is(p) {
     width: 100%;
     top: 95%;
     transform: translate(-50%, -100%);
@@ -274,7 +274,7 @@ form.sign-in-form {
   }
 
   .signin-signup,
-  .container.sign-up-mode .signin-signup {
+  .container.sign-up-mode .signin-signu:is(p) {
     left: 50%;
   }
 
@@ -311,11 +311,11 @@ form.sign-in-form {
     transition-delay: 0.8s;
   }
 
-  .panel h3 {
+  .panel :is(h3) {
     font-size: 1.2rem;
   }
 
-  .panel p {
+  .panel :is(p) {
     font-size: 0.7rem;
     padding: 0.5rem 0;
   }
@@ -358,7 +358,7 @@ form.sign-in-form {
     transform: translateY(300px);
   }
 
-  .container.sign-up-mode .signin-signup {
+  .container.sign-up-mode .signin-signu:is(p) {
     top: 5%;
     transform: translate(-50%, 0);
   }

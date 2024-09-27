@@ -7,22 +7,22 @@
     width: 100%;
 }
 
-div {
+:is(div) {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 40px 0 0 0;
 
-    h2 {
+    :is(h2) {
         color: rgb(99, 99, 99);
 
     }
 
-    p {
+    :is(p) {
         font-size: 25px;
         color: rgb(99, 99, 99);
 
-        a {
+        :is(a) {
             text-decoration: none;
         }
     }
@@ -30,11 +30,11 @@ div {
 
 
 
-svg#freepik_stories-404-error-with-a-cute-animal:not(.animated) .animable {
+:is(svg)#freepik_stories-404-error-with-a-cute-animal:not(.animated) .animable {
     opacity: 0;
 }
 
-svg#freepik_stories-404-error-with-a-cute-animal.animated #freepik--404-error--inject-2 {
+:is(svg)#freepik_stories-404-error-with-a-cute-animal.animated #freepik--404-error--inject-2 {
     animation: 1s 1 forwards cubic-bezier(.36, -0.01, .5, 1.38) fadeIn;
     animation-delay: 0s;
 }

@@ -1,44 +1,44 @@
-a {
+:is(a) {
     color: var(--ui-color-brand);
     text-decoration-color: var(--ui-color-typography-note);
 }
 
-h1,
-h2,
-h4,
-p,
-ul {
+:is(h1),
+:is(h2),
+:is(h4),
+:is(p),
+:is(ul) {
     margin-top: 0;
 }
 
-h1,
-h2,
-h4 {
+:is(h1),
+:is(h2),
+:is(h4) {
     color: var(--ui-color-typography-heading);
 }
 
-h1,
-h2 {
+:is(h1),
+:is(h2) {
     margin-bottom: var(--ui-typography-margin-heading);
 }
 
-h1 {
+:is(h1) {
     font-size: var(--ui-typography-h1);
     line-height: var(--ui-typography-h1-leading);
 }
 
-h2 {
+:is(h2) {
     font-size: var(--ui-typography-h2);
     line-height: var(--ui-typography-h2-leading);
 }
 
-h4 {
+:is(h4) {
     font-size: var(--ui-typography-h4);
     line-height: var(--ui-typography-h4-leading);
 }
 
-p,
-ul {
+:is(p),
+:is(ul) {
     margin-bottom: var(--ui-typography-margin-body);
 }
 
@@ -47,7 +47,7 @@ ul:last-child {
     margin-bottom: 0;
 }
 
-ul {
+:is(ul) {
     padding-left: 0;
 }
 
@@ -68,8 +68,8 @@ small {
   4.0 IMAGE
   --------------------------------------------------------------*/
 
-img,
-svg {
+:is(img),
+:is(svg) {
     display: block;
     height: auto;
     margin: 0 auto;
@@ -109,7 +109,7 @@ svg {
   |
   --------------------------------------------------------------*/
 
-.ui-component-cta {
+.ui-component-ct:is(a) {
     flex-direction: column;
     row-gap: var(--ui-gap-cta);
 }
@@ -707,7 +707,7 @@ input[name="toggle"] {
         text-align: left;
     }
 
-    .ui-section-hero .ui-component-cta {
+    .ui-section-hero .ui-component-ct:is(a) {
         align-items: start;
     }
 
@@ -835,7 +835,7 @@ input[name="toggle"] {
     |
     ------------------------------------------------------------*/
 
-    .ui-section-hero .ui-component-cta {
+    .ui-section-hero .ui-component-ct:is(a) {
         align-items: center;
         column-gap: var(--ui-gap-cta);
         flex-direction: row;

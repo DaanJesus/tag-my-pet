@@ -45,7 +45,7 @@
     position: relative;
 }
 
-.main section {
+.main :is(section) {
     box-sizing: border-box;
     overflow-y: auto;
     height: calc(100vh - 66px);
@@ -59,7 +59,7 @@
     border-bottom: 1px solid #cacaca;
     padding: 10px;
 
-    h1 {
+    :is(h1) {
         margin: 0;
         font-weight: bold;
     }
@@ -171,8 +171,8 @@
     padding: 10px 20px;
     border-radius: 5px;
 
-    h2,
-    h4 {
+    :is(h2),
+    :is(h4) {
         margin: 0px;
     }
 }
@@ -218,7 +218,7 @@
     margin-left: 0.5rem;
 }
 
-.username-section {
+.username-:is(section) {
     display: flex;
     font-size: 0.875rem;
 }
@@ -238,7 +238,7 @@
         outline: none;
     }
 
-    h1 {
+    :is(h1) {
         font-size: 24px;
     }
 
@@ -256,7 +256,7 @@
 
     }
 
-    a {
+    :is(a) {
         text-decoration: none;
         color: inherit;
     }
@@ -433,7 +433,7 @@
         border-bottom: 1px solid #cacaca;
         padding: 10px 0;
 
-        h1 {
+        :is(h1) {
             margin: 0;
             font-weight: bold;
         }
@@ -472,7 +472,7 @@
 /* Dispositivos Móveis Pequenos (até 480px) */
 @media (max-width: 480px) {
 
-    .main__header span {
+    .main__header :is(span) {
         display: none;
     }
 
@@ -481,7 +481,7 @@
         max-width: 400px;
     }
 
-    .main section {
+    .main :is(section) {
         padding: 0px;
         height: calc(100vh - 100px);
         padding: 20px 0;
@@ -490,7 +490,7 @@
     .options {
         gap: 10px;
 
-        a {
+        :is(a) {
             font-size: 17px;
         }
     }
@@ -505,7 +505,7 @@
 @media (min-width: 768px) and (max-width: 1024px) {
 
     /* Estilos aqui */
-    .main__header span {
+    .main__header :is(span) {
         display: none;
     }
 }

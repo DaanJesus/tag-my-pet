@@ -14,7 +14,7 @@
 /*
     Set the color of the icon
   */
-svg path,
-svg rect {
+:is(svg) :is(path),
+:is(svg) :is(rect) {
     fill: #88B04B;
 }

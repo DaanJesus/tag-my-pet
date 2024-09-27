@@ -11,7 +11,7 @@
     height: 30px;
     margin-bottom: 20px;
 
-    h2 {
+    :is(h2) {
         margin: 0;
     }
 }
@@ -49,7 +49,7 @@ form {
     /* Margens laterais */
 }
 
-.button-group {
+.button-grou:is(p) {
     display: flex;
     justify-content: space-between;
 }
@@ -76,7 +76,7 @@ mat-select-panel {
     align-items: center;
 }
 
-h4 span {
+h4 :is(span) {
     color: #979797;
 }
 

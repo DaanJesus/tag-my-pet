@@ -12,19 +12,19 @@
   box-sizing: inherit;
 }
 
-html {
+:is(html) {
   box-sizing: border-box;
 }
 
 html,
-body {
+:is(body) {
   height: 100%;
 }
 
-body {
+:is(body) {
   margin: 0 auto;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, :is(body) { height: 100%; }
+:is(body) { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

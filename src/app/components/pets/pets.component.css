@@ -62,13 +62,13 @@
     width: 100%;
 }
 
-.bottom-section h3 {
+.bottom-section :is(h3) {
     margin: 10px 0;
     font-weight: bold;
     color: #636363;
 }
 
-.pet-details p {
+.pet-details :is(p) {
     display: flex;
     justify-content: space-between;
     margin: 5px 0;
@@ -108,7 +108,7 @@
     transition: transform 0.3s ease;
 }
 
-.add-btn span {
+.add-btn :is(span) {
     display: none;
 }
 
@@ -122,7 +122,7 @@
         transform: rotate(360deg);
     }
 
-    .add-btn:hover span {
+    .add-btn:hover :is(span) {
         margin-left: 10px;
         display: inline;
     }
@@ -143,12 +143,12 @@
         margin: 0 15px 15px 15px;
     }
 
-    .add-btn span {
+    .add-btn :is(span) {
         display: inline;
         margin-left: 10px;
     }
 
-    .card-header h4 {
+    .card-header :is(h4) {
         font-size: 16px;
     }
 
@@ -172,7 +172,7 @@
         align-items: center;
         gap: 10px;
 
-        h6 {
+        :is(h6) {
             font-size: 16px;
         }
     }
