@@ -36,6 +36,7 @@ import { InfoPetComponent } from './components/pets/info-pet/info-pet.component'
 import { MainlayoutComponent } from './components/mainlayout/mainlayout.component';
 import { PgnotfoundComponent } from './components/pgnotfound/pgnotfound.component';
 import { ConfirmaDialogComponent } from './components/pets/confirma-dialog/confirma-dialog.component';
+import { PetInfoQrcodeComponent } from './components/pets/pet-info-qrcode/pet-info-qrcode.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { ConfirmaDialogComponent } from './components/pets/confirma-dialog/confi
     MainlayoutComponent,
     PgnotfoundComponent,
     ConfirmaDialogComponent,
+    PetInfoQrcodeComponent,
   ],
   imports: [
     BrowserModule,

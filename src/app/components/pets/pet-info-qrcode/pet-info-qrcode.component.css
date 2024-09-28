@@ -1,0 +1,142 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.pet-info-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    text-align: center;
+    background: linear-gradient(135deg, #2fb145, #88b04b);
+    padding: 40px 20px;
+    color: white;
+}
+
+.profile-photo img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 5px solid white;
+}
+
+.pet-name {
+    font-size: 24px;
+    margin: 10px 0;
+}
+
+.pet-tagline {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #fff7;
+}
+
+.contact-owner-btn {
+    background-color: #fff;
+    color: #2fb145;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: background 0.3s;
+}
+
+.contact-owner-btn:hover {
+    background-color: #88b04b;
+}
+
+.main-content {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.main-content h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.pet-details,
+.owner-details {
+    width: 48%;
+}
+
+.pet-details ul,
+.owner-details ul {
+    list-style: none;
+    padding: 0;
+}
+
+.pet-details li,
+.owner-details li {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.pet-details li span,
+.owner-details li span {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.owner-details a {
+    color: #2fb145;
+    text-decoration: none;
+}
+
+.owner-details a:hover {
+    text-decoration: underline;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.safety-notice {
+    background-color: #fff3e0;
+    color: #333;
+    padding: 10px;
+    border-left: 5px solid #ff9800;
+    font-size: 14px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.report-found-btn {
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 30px;
+}
+
+.report-found-btn:hover {
+    background-color: #ffb74d;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-content {
+        flex-direction: column;
+    }
+
+    .pet-details,
+    .owner-details {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}

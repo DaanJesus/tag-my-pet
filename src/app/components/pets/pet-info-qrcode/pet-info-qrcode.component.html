@@ -1,0 +1,42 @@
+<div class="pet-info-container">
+    <!-- Header Section -->
+    <header class="header">
+        <div class="profile-photo">
+            <img [src]="pet.photo" alt="Pet Photo" />
+        </div>
+        <h1 class="pet-name">{{pet.name}}</h1>
+        <p class="pet-tagline">Lost and Loved</p>
+        <button class="contact-owner-btn">Contact Owner</button>
+    </header>
+
+    <!-- Main Content Section -->
+    <div class="main-content">
+        <div class="pet-details">
+            <h2>Detalhes</h2>
+            <ul>
+                <li><span>🐾</span> Raça: {{pet.breed}}</li>
+                <li><span>🎂</span> Idade: {{calculateAge(pet.birthDate)}}</li>
+                <li><span>🚻</span> Gênero: {{pet.sex}}</li>
+                <li><span>⚖️</span> Peso: {{pet.weight}}kg</li>
+                <li><span>🎨</span> Pelo: {{pet.furColor}}</li>
+                <li><span>🏥</span> Cuidados Especiais: {{pet.medicalInfo}}</li>
+            </ul>
+        </div>
+
+        <div class="owner-details">
+            <h2>Owner Information</h2>
+            <ul>
+                <li><span>🧑</span> Name: John Doe</li>
+                <li><span>📞</span> Phone: <a href="tel:+123456789">+1 234-567-8910</a></li>
+                <li><span>📧</span> Email: <a href="mailto:johndoe@email.com">johndoe&#64;email.com</a></li>
+                <li><span>🏡</span> Address: 123 Pet St., Petville, CA</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <p class="safety-notice">Found this pet? Please ensure it is safe while you contact the owner. Thank you!</p>
+        <button class="report-found-btn">Report as Found</button>
+    </footer>
+</div>

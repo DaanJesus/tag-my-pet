@@ -32,8 +32,8 @@ export class PetService extends HttpService {
   }
 
   // Método para obter um pet pelo ID
-  getPet(id: string): Observable<Pet> {
-    return this.http.get<Pet>(`${this.apiUrl}/${id}`, { ...this.getHttOptions(), observe: 'body' })
+  getPetById(id: string): Observable<Pet> {
+    return this.http.get<Pet>(`${this.apiUrl}/pet-info/${id}`)
       .pipe(
         tap((data: any) => {
           return data;

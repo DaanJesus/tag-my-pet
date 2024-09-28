@@ -9,11 +9,13 @@ import { PetsComponent } from './components/pets/pets.component';
 import { ConfigComponent } from './components/config/config.component';
 import { MainlayoutComponent } from './components/mainlayout/mainlayout.component';
 import { PgnotfoundComponent } from './components/pgnotfound/pgnotfound.component';
+import { PetInfoQrcodeComponent } from './components/pets/pet-info-qrcode/pet-info-qrcode.component';
 
 const routes: Routes = [
   { path: 'auth', component: RegisterComponent, canActivate: [AuthRedirectGuard] },
   { path: 'index', component: LandpageComponent },
   { path: '404-page-not-found', component: PgnotfoundComponent },
+  { path: 'pet-info/:id', component: PetInfoQrcodeComponent },
   {
     path: '',
     component: MainlayoutComponent,
