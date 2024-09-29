@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { catchError, of, switchMap } from 'rxjs';
+import { Pet } from 'src/app/models/Pet';
 import { PetService } from 'src/app/services/pet.service';
 
 @Component({
@@ -8,22 +10,32 @@ import { PetService } from 'src/app/services/pet.service';
   styleUrls: ['./pet-info-qrcode.component.css']
 })
 export class PetInfoQrcodeComponent {
-  pet: any;
+  pet!: Pet;
+  owner: any = {};
+  tracks: number[] = Array.from({ length: 50 });
 
   constructor(
     private route: ActivatedRoute,
-    private petService: PetService
+    private petService: PetService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     const petId = this.route.snapshot.paramMap.get('id');
 
     if (petId) {
-      this.petService.getPetById(petId).subscribe(petData => {
-        this.pet = petData;
-      });
-    } else {
-      console.error('ID do pet não encontrado.');
+      this.route.paramMap
+        .pipe(
+          switchMap(params => this.petService.getPetById(params.get('id') as string)),
+          catchError(error => {
+            return of(null);
+          })
+        )
+        .subscribe(petData => {
+          if (petData) {
+            this.pet = petData;
+          }
+        });
     }
   }
 
@@ -47,5 +59,13 @@ export class PetInfoQrcodeComponent {
 
     const ageDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
     return ageDays < 30 ? 'Menos de 1 mês' : `${ageMonths} meses`;
+  }
+
+  contactOwner() {
+
+  }
+
+  goBack() {
+    this.router.navigate(['/']);
   }
 }

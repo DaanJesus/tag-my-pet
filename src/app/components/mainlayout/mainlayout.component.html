@@ -5,10 +5,10 @@
                 <header class="menu__header">
                     <div class="user">
                         <a class="user-profile" href="#">
-                            <i class="avatar"></i>
+                            <img [src]="user.photo" class="avatar">
                             <div class="user-info">
                                 <span class="user-name">{{user.name}}</span>
-                                <span class="user-handle">&#64;{{user.email}}</span>
+                                <span class="user-handle">&#64;{{user.tag}}</span>
                             </div>
                         </a>
                     </div>

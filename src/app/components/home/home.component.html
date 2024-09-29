@@ -1,32 +1,49 @@
 <div class="feed-content">
     <div class="post-composer">
-        <span class="avatar"></span>
+        <img [src]="user.photo" class="avatar">
         <div class="composer-content">
             <mat-form-field appearance="outline">
                 <mat-label>Como está seu pet hoje?</mat-label>
-                <textarea matInput rows="2"></textarea>
+                <textarea matInput #textPost rows="2"></textarea>
             </mat-form-field>
             <div class="composer-actions">
-                <button mat-button class="post-btn">Publicar</button>
+                <button mat-button class="post-btn" (click)="registerPost(textPost.value)">Publicar</button>
             </div>
         </div>
     </div>
 
     <div class="timeline">
-        <div class="post" *ngFor="let post of posts">
-            <span class="avatar"></span>
-            <div class="post-content">
-                <div class="post-header">
-                    <div>
-                        <span class="username">{{post.name}}</span>
-                        <span class="user-handle" style="color: rgb(143, 143, 143);">&#64;{{post.tag}}</span>
+        <div class="post" *ngFor="let post of posts; let i = index">
+            <div class="user">
+                <div class="user-left">
+                    <img [src]="post.author.photo" class="avatar">
+                    <div class="user-info">
+                        <span class="user-name">{{post.author.name}}</span>
+                        <span class="user-handle">&#64;{{post.author.tag}}</span>
                     </div>
-                    <span class="post-time">{{post.timestamp | date: "HH:mm"}}</span>
                 </div>
-                <p class="post-text">{{post.textPost}}</p>
-                <a href="#" class="post-tags">#{{post.hashtag}}</a>
+                <span class="post-time">{{post.createdAt | date: "HH:mm"}}</span>
+            </div>
+            <div class="post-content">
+                <!-- <div class="post-header">
+                    <div>
+                        <span class="username">{{post.author.name}}</span>
+                        <span class="user-handle" style="color: rgb(143, 143, 143);">&#64;{{post.author.tag}}</span>
+                    </div>
+                </div> -->
+                <p class="post-text">{{post.content}}</p>
+                <a href="#" class="post-tags" *ngIf="post.hashtag.length > 0">#{{post.hashtag}}</a>
                 <div class="post-actions">
-                    <button mat-button class="like-btn">Curtir</button>
+                    <div class="like-btn" mat-button (click)="toggleLike(post._id, i)">
+                        <!-- <i [ngClass]="{
+                            'bx bxs-heart-circle liked': post.likes.includes(user._id),
+                            'bx bx-heart-circle': !post.likes.includes(user._id),
+                            'bx-tada': isMouseOver
+                          }" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()"></i> -->
+                        <i
+                            [ngClass]="post.likes.includes(user._id) ? 'bx bxs-heart-circle liked bx-tada' : 'bx bx-heart-circle bx-tada'"></i>
+                        {{post.likes.length}}
+                    </div>
                     <button mat-button class="share-btn">Compartilhar</button>
                 </div>
             </div>

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap');
+
 :root {
   --primary-color: #1f1f29;
   --primary-lighter: #2b2b3d;
@@ -10,6 +12,34 @@
 *:before,
 *:after {
   box-sizing: inherit;
+  font-family: 'Fredoka', sans-serif, 'boxicons';
+}
+
+.fas::before {
+  font-family: 'Fontawesome';
+}
+
+body {
+  font-family: 'Fredoka', sans-serif, 'boxicons' !important;
+}
+
+.mat-typography {
+  font-family: 'Fredoka', sans-serif, 'boxicons' !important;
+}
+
+.bx {
+  font-family: 'Fredoka', sans-serif, 'boxicons' !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span {
+  font-family: 'Fredoka', sans-serif, 'boxicons' !important;
 }
 
 :is(html) {
@@ -25,5 +55,4 @@
   margin: 0 auto;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
 }

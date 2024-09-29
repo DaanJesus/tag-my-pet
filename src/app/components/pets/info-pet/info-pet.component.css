@@ -11,9 +11,11 @@
     width: 100% !important;
 
     .photo {
-        height: 70px;
-        width: 70px;
+        height: 100px;
+        width: 100px;
         border-radius: 100%;
+        border: 2px solid var(--green);
+        padding: 2px;
     }
 
 }
@@ -21,6 +23,7 @@
 .content-header {
     display: flex;
     flex-direction: column;
+    justify-content: center;
 
     :is(h2),
     :is(h3) {

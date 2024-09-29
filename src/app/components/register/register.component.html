@@ -1,62 +1,82 @@
 <div #container class="container">
-    <app-particles> </app-particles>
+    <!-- <app-particles> </app-particles> -->
     <div class="forms-container">
         <div class="signin-signup">
             <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="sign-in-form">
                 <h2 class="title">Login</h2>
+
                 <div class="input-field">
-                    <i class="fas fa-user"></i>
-                    <input type="text" formControlName="email" placeholder="Username" />
+                    <i class='bx bxs-user'></i>
+                    <input type="email" id="email" formControlName="email" placeholder="E-mail da conta" />
+                    <label for="email">Email</label>
                 </div>
                 <div class="input-field">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" formControlName="password" placeholder="Password" />
+                    <i class='bx bxs-lock-alt'></i>
+                    <input type="password" id="senha" formControlName="password" placeholder="Senha" />
+                    <label for="email">Senha</label>
                 </div>
                 <input type="submit" value="Login" class="btn solid" />
                 <p class="social-text">Ou entre com uma plataforma social</p>
                 <div class="social-media">
                     <a href="#" class="social-icon">
-                        <i class="fab fa-facebook-f"></i>
+                        <i class='bx bxl-meta'></i>
                     </a>
                     <a href="#" class="social-icon">
-                        <i class="fab fa-twitter"></i>
+                        <i class='bx bxl-twitter'></i>
                     </a>
                     <a href="#" class="social-icon">
-                        <i class="fab fa-google"></i>
+                        <i class='bx bxl-google'></i>
                     </a>
                     <a href="#" class="social-icon">
-                        <i class="fab fa-linkedin-in"></i>
+                        <i class='bx bxl-linkedin'></i>
                     </a>
                 </div>
             </form>
             <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="sign-up-form">
                 <h2 class="title">Cadastrar</h2>
                 <div class="input-field">
-                    <i class="fas fa-user"></i>
-                    <input type="text" formControlName="name" placeholder="Username" />
+                    <i class='bx bxs-user'></i>
+                    <input type="text" id="username" formControlName="name"
+                        placeholder="Nome que será exibido no perfil" />
+                    <label for="username">Nome</label>
+                </div>
+
+                <div class="input-field">
+                    <i class="fas fa-paw"></i>
+                    <input type="text" id="tag" formControlName="tag" maxlength="30" placeholder="Ex: ana_oliveira"
+                        (input)="checkTagExistence($event)" (blur)="tagTouched = true">
+                    <label for="tag">Tag</label>
+                    <i *ngIf="tagExists" class='bx bxs-check-circle icon-check'></i>
+                    <i *ngIf="!tagExists && tagTouched" class='bx bx-x-circle icon-error'></i>
+                </div>
+
+                <div class="input-field">
+                    <i class='bx bxs-envelope'></i>
+                    <input type="email" formControlName="email" placeholder="Email" (input)="verificarEmail($event)"
+                        (blur)="emailTouched = true" />
+                    <label for="username">Email</label>
+                    <i *ngIf="emailValido" class='bx bxs-check-circle icon-check'></i>
+                    <i *ngIf="!emailValido && emailTouched" class='bx bx-x-circle icon-error'></i>
                 </div>
                 <div class="input-field">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" formControlName="email" placeholder="Email" />
-                </div>
-                <div class="input-field">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" formControlName="password" placeholder="Password" />
+                    <i class='bx bxs-lock-alt'></i>
+                    <input type="password" formControlName="password" placeholder="Senha" />
+                    <label for="username">Senha</label>
                 </div>
                 <input type="submit" class="btn" value="Sign up" />
                 <p class="social-text">Ou entre com uma plataforma social</p>
                 <div class="social-media">
                     <a href="#" class="social-icon">
-                        <i class="fab fa-facebook-f"></i>
+                        <i class='bx bxl-meta'></i>
                     </a>
                     <a href="#" class="social-icon">
-                        <i class="fab fa-twitter"></i>
+                        <i class='bx bxl-twitter'></i>
                     </a>
                     <a href="#" class="social-icon">
-                        <i class="fab fa-google"></i>
+                        <i class='bx bxl-google'></i>
                     </a>
                     <a href="#" class="social-icon">
-                        <i class="fab fa-linkedin-in"></i>
+                        <i class='bx bxl-linkedin'></i>
                     </a>
                 </div>
             </form>

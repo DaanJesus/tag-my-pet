@@ -1,7 +1,9 @@
-import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { TimelineMax, Power2, Power4 } from 'gsap';
 import * as $ from 'jquery';
 import { timestamp } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
+import { PostService } from 'src/app/services/post.service';
 
 @Component({
   selector: 'app-home',
@@ -10,60 +12,56 @@ import { timestamp } from 'rxjs';
 })
 export class HomeComponent implements OnInit {
 
-  posts: any = [];
-  
-  ngOnInit(): void {
-    var obj = [{
-      name: "Daan",
-      tag: "daanoliveira",
-      timestamp: Date.now(),
-      textPost: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                          eiusmod
-                                          tempor incididunt ut labore et dolore magna aliqua.`,
-      hashtag: "hashtag"
-    },
-    {
-      name: "Cibelly",
-      tag: "cibellymei",
-      timestamp: Date.now(),
-      textPost: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                          eiusmod
-                                          tempor incididunt ut labore et dolore magna aliqua.`,
-      hashtag: "hashtag"
-    },
-    {
-      name: "Luna",
-      tag: "lunacat",
-      timestamp: Date.now(),
-      textPost: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                          eiusmod
-                                          tempor incididunt ut labore et dolore magna aliqua.`,
-      hashtag: "hashtag"
-    },
-    {
-      name: "Daan",
-      tag: "daanoliveira",
-      timestamp: Date.now(),
-      textPost: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                          eiusmod
-                                          tempor incididunt ut labore et dolore magna aliqua.`,
-      hashtag: "hashtag"
-    },
-    {
-      name: "Daan",
-      tag: "daanoliveira",
-      timestamp: Date.now(),
-      textPost: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                          eiusmod
-                                          tempor incididunt ut labore et dolore magna aliqua.`,
-      hashtag: "hashtag"
-    }]
+  @Input() post: any; // Receber o post como input
+  isLiked: boolean = false;
 
-    this.posts = obj
+  posts: any = [];
+  user: any;
+
+  isMouseOver: boolean = false
+
+  constructor(
+    private postService: PostService,
+    private authService: AuthService
+  ) { }
+
+  ngOnInit(): void {
+
+    this.postService.getPosts().subscribe(posts => {
+      this.posts = posts
+      console.log(posts);
+
+    })
+
+    this.authService.user$.subscribe(user => {
+      this.user = user
+    })
+  }
+
+  toggleLike(postId: string, index: number) {
+    this.postService.toggleLike(postId, this.user._id).subscribe((updatedPost) => {
+      this.posts[index] = updatedPost;
+    });
+  }
+
+  onMouseEnter() {
+    this.isMouseOver = true;
+  }
+
+  onMouseLeave() {
+    this.isMouseOver = false;
+  }
+
+  registerPost(textPost: any) {
+    const post = {
+      content: textPost,
+      author: this.user,
+    }
+
+    this.postService.registerPost(post).subscribe(res => {
+      console.log(res);
+
+      this.posts.push(res)
+    })
   }
 }

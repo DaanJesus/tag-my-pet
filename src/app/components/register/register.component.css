@@ -54,39 +54,88 @@ form.sign-in-form {
 }
 
 .input-field {
+  position: relative;
+  margin: 10px 0;
   max-width: 380px;
   width: 100%;
-  background-color: #f0f0f0;
-  margin: 10px 0;
-  height: 55px;
-  border-radius: 55px;
-  display: grid;
-  grid-template-columns: 15% 85%;
-  padding: 0 0.4rem;
-  position: relative;
 }
 
 .input-field i {
-  text-align: center;
-  line-height: 55px;
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
   color: #88B04B;
-  transition: 0.5s;
-  font-size: 1.1rem;
+  font-size: 1.5rem;
+  line-height: 55px;
+}
+
+.input-field .icon-check::before,
+.icon-error::before {
+  position: absolute;
+  top: 50%;
+  right: 0px;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  line-height: 55px;
+  margin-top: 2px;
+}
+
+.input-field .icon-error {
+  color: red;
+  right: 10px!important;
+  line-height: 55px!important;
+
+}
+
+.input-field .icon-check {
+  right: 10px!important;
+  line-height: 55px!important;
+
+}
+
+.input-field label {
+  position: absolute;
+  top: 50%;
+  left: 40px; /* Espaço entre o ícone e o label */
+  transform: translateY(-50%);
+  background-color: white;
+  padding: 0 5px;
+  color: #88B04B;
+  font-size: 1rem;
+  transition: 0.3s;
+  pointer-events: none;
 }
 
 .input-field input {
-  background: none;
+  width: 100%;
+  padding: 15px 40px 15px 40px; /* Espaço para o ícone da esquerda */
+  border: 1px solid #888;
+  border-radius: 50px;
   outline: none;
-  border: none;
-  line-height: 1;
-  font-weight: 600;
-  font-size: 1.1rem;
-  color: #333;
+  font-size: 1rem;
+  transition: border-color 0.3s;
 }
 
 .input-field input::placeholder {
-  color: #aaa;
-  font-weight: 500;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.input-field input:focus {
+  border-color: #88B04B;
+  box-shadow: 0 0 5px #88B04B;
+}
+
+.input-field input:focus::placeholder {
+  opacity: 1; /* Mostra o placeholder ao focar */
+}
+
+.input-field input:focus + label,
+.input-field input:not(:placeholder-shown) + label {
+  top: 0;
+  font-size: 1rem;
+  color: #88B04B;
 }
 
 .social-text {
