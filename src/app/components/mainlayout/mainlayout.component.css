@@ -1,13 +1,14 @@
 * {
     line-height: 1.5;
-    background: #fafbff;
+}
+
+.body {
+    background: #fafbff !important;
 }
 
 .options--item.active {
     background-color: #88B04B;
-    /* Cor de fundo quando ativo */
     color: white;
-    /* Cor do texto quando ativo */
 }
 
 .mobile-screen {
@@ -43,6 +44,10 @@
 
 .main {
     position: relative;
+    background: #fafbff !important;
+    margin: 0;
+    margin-left: 260px;
+    flex: 1;
 }
 
 .main :is(section) {
@@ -74,10 +79,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-    }
-
-    .notification-btn:hover {
-        color: var(--primary-color);
+        background: #fafbff;
     }
 }
 
@@ -153,14 +155,7 @@
 
 .menu-btn {
     margin-right: 10px;
-}
-
-.main {
-    margin: 0;
-    margin-left: 260px;
-    background: #f6f8fa;
-    flex: 1;
-    background-color: #fff;
+    background: #fafbff;
 }
 
 .card-header {

@@ -1,13 +1,24 @@
 <div class="feed-content">
     <div class="post-composer">
-        <img [src]="user.photo" class="avatar">
-        <div class="composer-content">
-            <mat-form-field appearance="outline">
-                <mat-label>Como está seu pet hoje?</mat-label>
-                <textarea matInput #textPost rows="2"></textarea>
-            </mat-form-field>
-            <div class="composer-actions">
-                <button mat-button class="post-btn" (click)="registerPost(textPost.value)">Publicar</button>
+        <h4 class="title-header">Criar uma publicação</h4>
+        <div class="post-flex">
+            <img [src]="user.photo" class="avatar">
+            <div class="composer-content">
+                <mat-form-field appearance="outline">
+                    <mat-label>Como está seu pet hoje?</mat-label>
+                    <textarea matInput [(ngModel)]="textPost" rows="2"></textarea>
+                </mat-form-field>
+
+                <div *ngIf="selectedImage" class="image-preview">
+                    <img [src]="selectedImage" alt="Imagem selecionada" class="preview-img">
+                </div>
+
+                <div class="composer-actions">
+                    <!-- Botão para selecionar a imagem -->
+                    <input type="file" (change)="onImageSelected($event)" accept="image/*" hidden #fileInput>
+                    <button mat-button class="post-btn" (click)="fileInput.click()"><i class='bx bxs-camera' ></i></button>
+                    <button mat-button class="post-btn" (click)="registerPost()">Publicar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -22,56 +33,30 @@
                         <span class="user-handle">&#64;{{post.author.tag}}</span>
                     </div>
                 </div>
-                <span class="post-time">{{post.createdAt | date: "HH:mm"}}</span>
+                <span class="post-time">Postado às {{post.createdAt | date: "HH:mm"}}</span>
             </div>
             <div class="post-content">
-                <!-- <div class="post-header">
-                    <div>
-                        <span class="username">{{post.author.name}}</span>
-                        <span class="user-handle" style="color: rgb(143, 143, 143);">&#64;{{post.author.tag}}</span>
-                    </div>
-                </div> -->
-                <p class="post-text">{{post.content}}</p>
+                <p class="post-text" [class.expanded]="isExpanded">
+                    {{ isExpanded ? post.content : (post.content | slice:0:200) }}
+                    <span *ngIf="!isExpanded && post.content.length > 200">...</span>
+                    <span *ngIf="post.content.length > 100">
+                        <i style="cursor: pointer; color: rgb(32, 32, 226);" (click)="toggleExpand()">
+                            {{ isExpanded ? 'ver menos' : 'ver mais' }}
+                        </i>
+                    </span>
+                </p>
+                <img *ngIf="post.image" class="post-image" [src]="post.image" alt="">
                 <a href="#" class="post-tags" *ngIf="post.hashtag.length > 0">#{{post.hashtag}}</a>
                 <div class="post-actions">
                     <div class="like-btn" mat-button (click)="toggleLike(post._id, i)">
-                        <!-- <i [ngClass]="{
-                            'bx bxs-heart-circle liked': post.likes.includes(user._id),
-                            'bx bx-heart-circle': !post.likes.includes(user._id),
-                            'bx-tada': isMouseOver
-                          }" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()"></i> -->
                         <i
-                            [ngClass]="post.likes.includes(user._id) ? 'bx bxs-heart-circle liked bx-tada' : 'bx bx-heart-circle bx-tada'"></i>
+                            [ngClass]="post.likes.includes(user._id) ? 'bx bxs-heart-circle liked bx-tada' : 'bx bx-heart-circle bx-tada'">
+                        </i>
                         {{post.likes.length}}
                     </div>
                     <button mat-button class="share-btn">Compartilhar</button>
                 </div>
             </div>
         </div>
-
-        <!-- <div class="post">
-            <span class="avatar"></span>
-            <div class="post-content">
-                <div class="post-header">
-                    <div>
-                        <span class="username">Username</span>
-                        <span class="user-handle"
-                            style="color: rgb(143, 143, 143);">&#64;username</span>
-                    </div>
-                    <span class="post-time">Just now</span>
-                </div>
-                <p class="post-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                    eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-                <a href="#">#hashtag</a>
-                <img class="post-image" src="../../../assets/background_animal.png" alt="">
-                <div class="post-actions">
-                    <button mat-button class="like-btn">Curtir</button>
-                    <button mat-button class="share-btn">Compartilhar</button>
-                </div>
-            </div>
-        </div> -->
-
     </div>
 </div>

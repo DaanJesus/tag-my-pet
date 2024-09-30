@@ -8,6 +8,20 @@
   --transGray: #dbdbdb;
 }
 
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e0e4db;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #88B04B;
+  border-radius: 12px;
+}
+
+
 *,
 *:before,
 *:after {
