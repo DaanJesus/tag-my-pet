@@ -440,3 +440,52 @@ form.sign-in-form {
     left: 50%;
   }
 }
+
+.tracer {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: black; /* Cor da tracer, se necessário */
+}
+
+.print {
+  position: fixed;
+  width: 40px;  /* Tamanho fixo para a pegada */
+  height: 40px; /* Tamanho fixo para a pegada */
+  left: 0;
+  top: 0;
+  animation-duration: 10s; /* Aumentar a duração da animação de desaparecimento */
+  animation-name: blurout;
+  animation-fill-mode: forwards;
+}
+
+.print::before {
+  content: '';
+  display: block;
+  background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/982762/paw4.svg') no-repeat center center;
+  background-size: contain; /* Ajustar a imagem para caber no espaço */
+  width: 40px;   /* Tamanho da imagem da pegada */
+  height: 40px;  /* Tamanho da imagem da pegada */
+  animation-duration: 1s; /* Duração do fade-in */
+  animation-name: fadein;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes blurout {
+  from {
+    filter: blur(0px);
+    opacity: 1; /* Começar totalmente opaco */
+  }
+  to {
+    filter: blur(5px);
+    opacity: 0; /* Terminar totalmente transparente */
+  }
+}

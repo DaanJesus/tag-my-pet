@@ -1,36 +1,23 @@
-<!-- <div class="content">
-    <div class="grid-list">
-        <div class="card-pet" >
-            <img >
-            <h6></h6>
-        </div>
-    </div>
-    <button mat-button class="add-btn" (click)="addNewPet()">Cadastrar Pet</button>
-</div> -->
-
-<div class="content">
-    <div class="card-pet" *ngFor="let pet of pets" (click)="viewInfoPet(pet)">
-        <div class="top-section">
-            <img [src]="pet.photo" alt="Pet Photo" class="pet-photo">
-        </div>
-        <div class="middle-floating-img">
-            <img [src]="pet.photo" alt="Pet Floating Photo" class="floating-photo">
-        </div>
-        <div class="bottom-section">
-            <h3>{{pet.name}}</h3>
+<div class="pets-container">
+    <div class="pets-grid">
+        <div *ngFor="let pet of pets" class="pet-card" (click)="viewInfoPet(pet)">
+            <div class="image-container">
+                <img [src]="pet.photo" alt="{{ pet.name }}" class="pet-image" />
+                <div class="overlay">
+                    <h3 class="pet-name">{{ pet.name }}</h3>
+                    <p class="pet-type">Pelo {{pet.furColor}}</p>
+                </div>
+            </div>
             <div class="pet-details">
-                <p>
-                    <span class="label">Idade:</span>
-                    <span class="value">{{ calculateAge(pet.birthDate) }}</span>
-                </p>
-                <p>
-                    <span class="label">Raça:</span>
-                    <span class="value">{{ pet.breed }}</span>
-                </p>
+                <h3>{{ pet.name }}</h3>
+                <h4>Raça: <span>{{pet.breed}}</span></h4>
+                <h4>Gênero: <span>{{pet.sex}}</span></h4>
             </div>
         </div>
     </div>
-
 </div>
-<button mat-button class="add-btn" (click)="addNewPet()"><i class="fa-solid fa-plus"></i><span>Adicionar Novo
-        Pet</span></button>
+
+<button mat-button class="add-btn" (click)="addNewPet()">
+    <i class="fa-solid fa-plus"></i>
+    <span>Adicionar Novo Pet</span>
+</button>

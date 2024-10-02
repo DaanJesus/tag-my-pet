@@ -18,7 +18,7 @@ export class PostService extends HttpService {
   }
 
   toggleLike(postId: string, user: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${postId}/like`, {user}, { ...this.getHttOptions(), observe: 'body' })
+    return this.http.post(`${this.apiUrl}/${postId}/like`, { user }, { ...this.getHttpCustomOption(), observe: 'body' })
       .pipe(
         tap((data: any) => {
           return data;
@@ -31,7 +31,7 @@ export class PostService extends HttpService {
   }
 
   registerPost(post: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, post, { ...this.getHttOptions(), observe: 'body' })
+    return this.http.post(`${this.apiUrl}/register`, post, { ...this.getHttpCustomOption(), observe: 'body' })
       .pipe(
         tap((data: any) => {
           return data;
@@ -43,8 +43,8 @@ export class PostService extends HttpService {
       );
   }
 
-  getPosts(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/get-all`, { ...this.getHttOptions(), observe: 'body' })
+  getPosts(page: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/get?page=${page}&limit=10`, { ...this.getHttpCustomOption(), observe: 'body' })
       .pipe(
         tap((data: any) => {
           return data;

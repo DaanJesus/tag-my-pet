@@ -7,11 +7,19 @@
         </div>
     </div>
     <div class="pet-info">
-        <h4>Tipo <span>{{data.type}}</span></h4>
-        <h4>Sexo <span>{{data.sex}}</span></h4>
-        <h4>Castrado <span>{{data.castrated}}</span></h4>
+        <!-- <h4>Tipo <span>{{data.type}}</span></h4> -->
+        <h4>Gênero <span>{{data.sex}}</span></h4>
         <h4>Data Nascimento <span>{{data.birthDate | date: 'dd/MM/yyyy'}}</span></h4>
         <h4>Peso <span>{{data.weight}} kg</span></h4>
+        <h4>Castrado <span>{{data.castrated}}</span></h4>
+
+        <div class="medical-info">
+            <h4>Inforações Médicas</h4>
+            <div class="medical-info-text">
+                <p>{{ data.medicalInfo }}</p>
+            </div>
+        </div>
+
     </div>
 
     <!-- <div class="qrcode">
@@ -20,6 +28,7 @@
 
     <div class="actions">
         <button mat-button class="update btn" (click)="updatePet(data)">Alterar Cadastro</button>
-        <button mat-button matIconPrefix class="delete btn"><mat-icon>delete_outline</mat-icon> Excluir Cadastro</button>
+        <button mat-button matIconPrefix class="delete btn"><mat-icon>delete_outline</mat-icon> Excluir
+            Cadastro</button>
     </div>
 </div>

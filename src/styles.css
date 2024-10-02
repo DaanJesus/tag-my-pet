@@ -29,7 +29,7 @@
   font-family: 'Fredoka', sans-serif, 'boxicons';
 }
 
-.fas::before {
+.fas::before, .fa-solid::before {
   font-family: 'Fontawesome';
 }
 

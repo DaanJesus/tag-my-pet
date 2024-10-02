@@ -10,14 +10,7 @@ import { LoadingService } from './services/loading.service';
 export class AppComponent {
   title = ''
 
-  isLoading$ = this.loadingService.isLoading$;
-
-  constructor(private loadingService: LoadingService, private cdr: ChangeDetectorRef) {
-
-    this.isLoading$.subscribe(() => {
-      setTimeout(() => {
-        this.cdr.detectChanges();
-      }, 0);
-    });
+  constructor(public loadingService: LoadingService, private cdr: ChangeDetectorRef) {
   }
+
 }

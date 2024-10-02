@@ -1,8 +1,8 @@
-<div class="feed-content">
+<div class="feed-content"  #feedContent>
     <div class="post-composer">
         <h4 class="title-header">Criar uma publicação</h4>
         <div class="post-flex">
-            <img [src]="user.photo" class="avatar">
+            <img [src]="user.photo" class="avatar ">
             <div class="composer-content">
                 <mat-form-field appearance="outline">
                     <mat-label>Como está seu pet hoje?</mat-label>
@@ -14,9 +14,9 @@
                 </div>
 
                 <div class="composer-actions">
-                    <!-- Botão para selecionar a imagem -->
                     <input type="file" (change)="onImageSelected($event)" accept="image/*" hidden #fileInput>
-                    <button mat-button class="post-btn" (click)="fileInput.click()"><i class='bx bxs-camera' ></i></button>
+                    <button mat-button class="post-btn" (click)="fileInput.click()">
+                        <i class='bx bxs-camera'></i></button>
                     <button mat-button class="post-btn" (click)="registerPost()">Publicar</button>
                 </div>
             </div>
@@ -49,14 +49,33 @@
                 <a href="#" class="post-tags" *ngIf="post.hashtag.length > 0">#{{post.hashtag}}</a>
                 <div class="post-actions">
                     <div class="like-btn" mat-button (click)="toggleLike(post._id, i)">
+                        <!-- Curtir -->
                         <i
                             [ngClass]="post.likes.includes(user._id) ? 'bx bxs-heart-circle liked bx-tada' : 'bx bx-heart-circle bx-tada'">
                         </i>
                         {{post.likes.length}}
                     </div>
-                    <button mat-button class="share-btn">Compartilhar</button>
+
+                    <div class="share-btn" mat-button (click)="toggleLike(post._id, i)">
+                        <!-- Compartilhar -->
+                        <i class="bx bx-share bx-flip-horizontal"></i>
+                        {{post.likes.length}}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="loading-overlay" *ngIf="(loadingService.spinnerLoading$ | async)">
+        <div class="card-loading">
+            <i class="fa-solid fa-paw fa-beat-fade"></i>
+        </div>
+        <div class="card-loading">
+            <i class="fa-solid fa-paw fa-beat-fade"></i>
+        </div>
+        <div class="card-loading">
+            <i class="fa-solid fa-paw fa-beat-fade"></i>
+        </div>
+    </div>
+
 </div>

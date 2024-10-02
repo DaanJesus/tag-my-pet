@@ -1,8 +1,9 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { TimelineMax, Power2, Power4 } from 'gsap';
 import * as $ from 'jquery';
 import { timestamp } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
+import { LoadingService } from 'src/app/services/loading.service';
 import { PostService } from 'src/app/services/post.service';
 
 @Component({
@@ -10,12 +11,19 @@ import { PostService } from 'src/app/services/post.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
 
-  @Input() post: any; // Receber o post como input
+  @ViewChild('feedContent', { static: false }) feedContent!: ElementRef;
+  @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
+
+  @Input() post: any;
   isLiked: boolean = false;
 
   posts: any = [];
+  page = 1;
+  hasMorePosts = true;
+  isLoading: boolean = false;
+
   user: any;
 
   isMouseOver: boolean = false
@@ -26,16 +34,20 @@ export class HomeComponent implements OnInit {
   selectedImage: string | ArrayBuffer | null = null;
 
   constructor(
+    public loadingService: LoadingService,
     private postService: PostService,
     private authService: AuthService,
     private cdr: ChangeDetectorRef
   ) { }
+  ngAfterViewInit(): void {
+    this.feedContent.nativeElement.addEventListener('scroll', this.onScroll.bind(this));
+  }
 
   toggleExpand() {
     this.isExpanded = !this.isExpanded;
   }
 
-  onImageSelected(event: Event) {
+  onImageSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
@@ -46,13 +58,11 @@ export class HomeComponent implements OnInit {
         img.src = reader.result as string;
 
         img.onload = () => {
-          // Configurações do canvas
-          const MAX_WIDTH = 300; // Defina a largura máxima desejada
-          const MAX_HEIGHT = 300; // Defina a altura máxima desejada
+          const MAX_WIDTH = 300;
+          const MAX_HEIGHT = 300;
           let width = img.width;
           let height = img.height;
 
-          // Calcula a nova largura e altura
           if (width > height) {
             if (width > MAX_WIDTH) {
               height *= MAX_WIDTH / width;
@@ -65,7 +75,6 @@ export class HomeComponent implements OnInit {
             }
           }
 
-          // Cria um canvas para redimensionar a imagem
           const canvas = document.createElement('canvas');
           canvas.width = width;
           canvas.height = height;
@@ -73,26 +82,65 @@ export class HomeComponent implements OnInit {
           const ctx = canvas.getContext('2d');
           if (ctx) {
             ctx.drawImage(img, 0, 0, width, height);
-            this.selectedImage = canvas.toDataURL('image/jpeg'); // Converte a imagem redimensionada para Data URL
-            this.cdr.detectChanges(); // Força a detecção de mudanças
+            this.selectedImage = canvas.toDataURL('image/jpeg');
+            this.cdr.detectChanges();
           }
         };
       };
 
-      reader.readAsDataURL(file); // Lê a imagem como Data URL
+      reader.readAsDataURL(file);
     }
   }
 
+  // Reseta o campo de input utilizando ViewChild
+  resetFileInput(): void {
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = ''; // Reseta o campo de input
+    }
+  }
 
   ngOnInit(): void {
 
-    this.postService.getPosts().subscribe(posts => {
-      this.posts = posts
-    })
+    this.loadPosts();
 
     this.authService.user$.subscribe(user => {
       this.user = user
     })
+
+  }
+
+  loadPosts(): void {
+    if (!this.hasMorePosts || this.isLoading) {
+      return;
+    }
+
+    this.isLoading = true;
+
+    this.postService.getPosts(this.page).subscribe(
+      (data: any) => {
+        if (data.posts.length > 0) {
+          this.posts.push(...data.posts);
+          this.page++;
+        } else {
+          this.hasMorePosts = false;
+        }
+
+        this.isLoading = false;
+      }, (error) => {
+        this.isLoading = false;
+        console.error(error);
+      });
+  }
+
+  onScroll(): void {
+    const element = this.feedContent.nativeElement;
+    const scrollHeight = element.scrollHeight;
+    const scrollTop = element.scrollTop;
+    const clientHeight = element.clientHeight;
+
+    if (scrollTop + clientHeight >= scrollHeight * 0.8 && !this.isLoading) {
+      this.loadPosts();
+    }
   }
 
   toggleLike(postId: string, index: number) {
@@ -101,27 +149,27 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  onMouseEnter() {
-    this.isMouseOver = true;
-  }
-
-  onMouseLeave() {
-    this.isMouseOver = false;
-  }
-
   registerPost() {
+
+    if (this.textPost.trim() === '') {
+      return;
+    }
+
     const post: any = {
       content: this.textPost,
       author: this.user,
     };
 
     if (this.selectedImage) {
-      post.image = this.selectedImage
+      post.image = this.selectedImage;
     }
 
     this.postService.registerPost(post).subscribe(res => {
-      this.posts.push(res);
+      // Em vez de usar push, utilize unshift para adicionar o post no início
+      this.posts = [res, ...this.posts];
       this.textPost = '';
+      this.selectedImage = null;
+      this.resetFileInput();
     });
   }
 }

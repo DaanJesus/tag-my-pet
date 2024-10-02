@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSelect } from '@angular/material/select';
@@ -41,6 +41,7 @@ export class FormPetComponent implements OnInit, AfterViewInit {
   }
 
   @ViewChild('select') select: MatSelect | undefined;
+  @ViewChild('fileInput') fileInput!: ElementRef;
 
   formPet!: FormGroup;
 
@@ -50,7 +51,7 @@ export class FormPetComponent implements OnInit, AfterViewInit {
   breeds: string[] = []
   filteredBreeds: string[] = [];
 
-  currentStep = 1;
+  currentStep = 6;
   progressValue = 20;
 
   qrCodeUrl = ''
@@ -59,6 +60,11 @@ export class FormPetComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.filteredTypes = this.options;
+
+    const currentPhoto = this.formPet.get('photo')?.value;
+    if (currentPhoto) {
+      this.cdr.detectChanges(); // Isso vai forçar a atualização da UI
+    }
 
     this.formPet.statusChanges.subscribe(() => {
       this.isStepValid(this.currentStep);
@@ -90,9 +96,6 @@ export class FormPetComponent implements OnInit, AfterViewInit {
         });
       });
     }
-
-    console.log(this.dialogWidth);
-    
   }
 
   nextStep() {
@@ -109,20 +112,60 @@ export class FormPetComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onFileChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
       const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const preview = document.querySelector('.photo-preview') as HTMLImageElement;
-        if (preview) {
-          preview.src = e.target.result;
-          preview.style.display = 'block'; // Mostra a imagem
-        }
+
+      reader.onload = () => {
+        const img = new Image();
+        img.src = reader.result as string;
+
+        img.onload = () => {
+          const MAX_WIDTH = 300;
+          const MAX_HEIGHT = 300;
+          let width = img.width;
+          let height = img.height;
+
+          // Redimensiona a imagem
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height);
+            this.formPet.patchValue({ photo: canvas.toDataURL('image/jpeg') });
+            this.cdr.detectChanges();
+          }
+        };
       };
+
       reader.readAsDataURL(file);
     }
   }
+
+  resetFileInput(): void {
+    const fileInput = this.fileInput.nativeElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+    this.formPet.patchValue({ photo: null });
+  }
+
 
   onSubmit() {
 
@@ -137,11 +180,12 @@ export class FormPetComponent implements OnInit, AfterViewInit {
 
           this.petService.createPet(petData).subscribe(res => {
             if (res) {
-
               this.dialog.open(ConfirmaDialogComponent, {
                 width: this.dialogWidth,
                 data: res
               });
+              this.resetFileInput();
+              this.onCloseDialog()
             }
           });
         } else {
@@ -157,13 +201,11 @@ export class FormPetComponent implements OnInit, AfterViewInit {
     this.progressValue = (this.currentStep / 6) * 100;
   }
 
-  // Filtra as opções com base no texto de pesquisa
   filterType(event: Event) {
     const input = event.target as HTMLInputElement | null;
     if (input) {
       const filterValue = input.value.toLowerCase();
       if (filterValue.length >= 2) {
-        // Filtra as opções baseadas no valor do campo de pesquisa
         this.filteredTypes = this.filteredTypes.filter(option =>
           option.toLowerCase().includes(filterValue)
         );
@@ -176,7 +218,6 @@ export class FormPetComponent implements OnInit, AfterViewInit {
     if (input) {
       const filterValue = input.value.toLowerCase();
       if (filterValue.length >= 2) {
-        // Filtra as opções baseadas no valor do campo de pesquisa
         this.filteredBreeds = this.filteredBreeds.filter(option =>
           option.toLowerCase().includes(filterValue)
         );
@@ -192,7 +233,7 @@ export class FormPetComponent implements OnInit, AfterViewInit {
 
   }
 
-  onNoClick(): void {
+  onCloseDialog(): void {
     this.dialogRef.close();
   }
 
@@ -207,7 +248,7 @@ export class FormPetComponent implements OnInit, AfterViewInit {
       case 4:
         return !!(this.formPet.get('name')?.valid ?? false);
       case 5:
-        return true; // Se a etapa 5 não exigir validação
+        return true;
       default:
         return false;
     }

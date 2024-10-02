@@ -5,7 +5,23 @@
     overflow-y: auto;
     gap: 15px;
     padding: 20px;
+    height: 100%;
 }
+
+::-webkit-scrollbar {
+    width: 5px;
+    margin-left: 100px!important;
+}
+
+::-webkit-scrollbar-track {
+    background: #e0e4db;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #88B04B;
+    border-radius: 12px;
+}
+
 
 .post {
     display: flex;
@@ -29,16 +45,12 @@
 
 .image-preview {
     margin-top: 10px;
-    /* Espaçamento acima da imagem */
 }
 
 .preview-img {
     max-width: 100%;
-    /* Limita a largura da imagem ao contêiner */
     max-height: 300px;
-    /* Limita a altura da imagem */
     border-radius: 4px;
-    /* Bordas arredondadas */
 }
 
 .avatar {
@@ -58,11 +70,9 @@
     font-size: 0.7rem;
 }
 
-
 .liked {
     color: red;
 }
-
 
 .post-composer {
     display: flex;
@@ -82,7 +92,7 @@
 .post-text {
     margin-top: 0.5rem;
     color: #4a5568;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .post-tags {
@@ -107,24 +117,24 @@
 .share-btn {
     color: #707070 !important;
     font-size: 0.8rem;
-}
-
-.like-btn {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     gap: 5px;
     border-radius: 3px;
-    padding: 0 10px;
+    padding: 5px 10px;
+    font-weight: 500;
 }
 
-.like-btn:hover {
+.like-btn:hover,
+.share-btn:hover {
     cursor: pointer;
     background: #cecece69;
 }
 
-.like-btn :is(i) {
+.like-btn :is(i),
+.share-btn :is(i) {
     margin-top: 3px;
     font-size: 1.2rem;
 }
@@ -204,6 +214,51 @@
 
 .post-btn:hover {
     background-color: #c0e4ff;
+}
+
+.loading-overlay {
+    width: 100%;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+    .card-loading {
+        background: #ffffff;
+        padding: 7px 10px;
+        border-radius: 100%;
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.301);
+        animation: bounce 1s infinite;
+
+        .fa-solid {
+            font-size: 16px;
+        }
+    }
+}
+
+.card-loading:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.card-loading:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.card-loading:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+/* Animação de pulo */
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
 }
 
 .timeline {

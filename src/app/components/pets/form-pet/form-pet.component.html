@@ -89,13 +89,16 @@
             </ng-container>
 
             <ng-container *ngSwitchCase="6" class="photo-upload">
-                <h5>Maravilha! Agora é só escolher a melhor foto e finalizar em grande estilo <span>(opcional)</span>
-                </h5>
+                <h5>Selecione a melhor foto <span>(opcional)</span></h5>
                 <div class="photo-upload-container">
-                    <input type="file" (change)="onFileChange($event)" id="fileInput" formControlName="photo" />
+                    <input type="file" (change)="onImageSelected($event)" id="fileInput" #fileInput />
                     <label for="fileInput" class="photo-upload-label">
-                        <mat-icon>camera_alt</mat-icon>
-                        <img id="preview" class="photo-preview" [src]="formPet.value.photo" alt="Preview" />
+                        <img *ngIf="formPet.value.photo" class="photo-preview" [src]="formPet.value.photo"
+                            alt="Preview" />
+                        <div *ngIf="!formPet.value.photo" class="placeholder">
+                            <i class="bx bxs-camera bx-tada"></i>
+                            <span>Selecione uma imagem</span>
+                        </div>
                     </label>
                 </div>
             </ng-container>

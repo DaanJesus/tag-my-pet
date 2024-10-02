@@ -37,8 +37,8 @@ export class RegisterComponent implements AfterViewInit {
   ) {
     this.authForm = this.fb.group({
       name: ['', Validators.required],
-      email: ['dan@gmail.com', [Validators.required, Validators.email]],
-      password: ['123', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
       tag: ['', Validators.required],
     });
   }
@@ -104,8 +104,6 @@ export class RegisterComponent implements AfterViewInit {
     if (this.isLoginMode) {
       this.authService.login(email, password).subscribe({
         next: (res) => {
-          console.log(res);
-
           this._snackBar.open(res.message, "X", {
             duration: 2000,
           });
@@ -119,9 +117,7 @@ export class RegisterComponent implements AfterViewInit {
       });
     } else if (!this.isLoginMode && this.authForm.valid && this.tagExists == true && this.emailValido == true) {
       this.generateProfilePicture();
-
-      console.log(this.profileImage);
-
+      
       this.authService.register(name, email, password, tag, this.profileImage).subscribe({
         next: (res) => {
           this._snackBar.open(res.message, "X", {

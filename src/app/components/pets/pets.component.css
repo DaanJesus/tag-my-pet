@@ -1,189 +1,132 @@
-.content {
-    display: flex;
-    flex-wrap: wrap;
+body {
+    background-color: #f0f2f5;
+    font-family: 'Roboto', sans-serif;
+}
+
+.pets-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.title {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.pets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 15px;
 }
 
-
-.card-pet {
-    width: calc(33.33% - 15px);
-    border-radius: 10px;
+.pet-card {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
     position: relative;
-    background-color: white;
-    border: 2px solid #37b43d;
-    padding: 3px;
-    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.card-pet:hover {
-    transform: translateY(-8px) scale(1.03);
-    box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.25);
     cursor: pointer;
+    border: 2px solid green;
+    padding: 2px;
 }
 
-.top-section {
+.pet-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+.image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px 15px 0 0;
+}
+
+.pet-image {
     width: 100%;
-    height: 100px;
-    background-color: #f3f3f3;
+    height: 170px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.image-container:hover .pet-image {
+    transform: scale(1.1);
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-.pet-photo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 10px 10px 0 0;
+.image-container:hover .overlay {
+    opacity: 1;
 }
 
-.middle-floating-img {
-    position: absolute;
-    top: 50px;
-    left: 50%;
-    transform: translateX(-50%);
+.pet-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px 20px;
 }
 
-.floating-photo {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 3px solid white;
-    object-fit: cover;
-    background-color: #fff;
-}
-
-.bottom-section {
-    padding: 40px 10px 10px 10px;
+.pet-details h3 {
+    color: #333;
+    margin: 0;
     text-align: center;
-    width: 100%;
+    font-weight: 500;
+    font-size: 19px;
 }
 
-.bottom-section :is(h3) {
-    margin: 10px 0;
-    font-weight: bold;
-    color: #636363;
-}
-
-.pet-details :is(p) {
+.pet-details h4 {
     display: flex;
     justify-content: space-between;
-    margin: 5px 0;
+    color: #555;
+    margin: 0;
+    font-weight: 500;
 }
 
-.label {
-    font-weight: bold;
-    color: #636363;
+.pet-details h4 span {
+    font-weight: 400;
+    color: #555;
 }
 
-.value {
-    text-align: right;
-    color: #636363;
-    font-size: 13px;
-}
-
-.add-btn {
-    position: absolute;
-    font-size: 20px;
-    height: 60px;
-    width: 60px;
-    background-color: var(--green);
-    color: white !important;
-    bottom: 20px;
-    right: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    cursor: pointer;
-    transition: width 0.3s ease, border-radius 0.3s ease;
-}
-
-.add-btn i {
-    transition: transform 0.3s ease;
-}
-
-.add-btn :is(span) {
-    display: none;
-}
-
-@media (min-width: 541px) {
-    .add-btn:hover {
-        width: 300px;
-        border-radius: 8px;
+/* Estilos modernos para dispositivos móveis */
+@media (max-width: 768px) {
+    .pets-grid {
+        grid-template-columns: 1fr;
+        /* Apenas uma coluna em telas menores */
     }
 
-    .add-btn:hover i {
-        transform: rotate(360deg);
+    .pet-details {
+        padding: 15px;
     }
 
-    .add-btn:hover :is(span) {
-        margin-left: 10px;
-        display: inline;
+    .pet-details h4 {
+        font-size: 1em;
+    }
+
+    .pet-details h3 {
+        font-size: 1.3em;
     }
 }
 
-@media (max-width: 540px) {
 
-    .content {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: 15px;
-    }
-
-    .add-btn {
-        position: fixed;
-        font-size: 20px;
-        height: 50px;
-        background-color: var(--green);
-        border-radius: 8px;
-        color: white !important;
-        bottom: 0;
-        left: 0;
-        width: calc(100% - 30px);
-        margin: 0 15px 15px 15px;
-    }
-
-    .add-btn :is(span) {
-        display: inline;
-        margin-left: 10px;
-    }
-
-    .card-header :is(h4) {
-        font-size: 16px;
-    }
-
-    .card-header button {
-        margin-top: 8px;
-        font-size: 14px;
-    }
-
-    .grid-list {
-        display: flex;
-        gap: 10px;
-        align-content: flex-start;
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
-
-    .card-pet {
-
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        width: calc(50% - 15px);
-
-        :is(h6) {
-            font-size: 16px;
-        }
-    }
-
+button {
+    width: 100%;
+    border-radius: 5px;
+    margin-top: 10px;
 }
-
-@media (max-width: 768px) {}

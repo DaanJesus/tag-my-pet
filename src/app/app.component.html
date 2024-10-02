@@ -1,17 +1,35 @@
-<div class="loader loader--style1" *ngIf="isLoading$ | async" title="0">
-    <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-        x="0px" y="0px" width="80px" height="80px" viewBox="0 0 40 40" enable-background="new 0 0 40 40"
-        xml:space="preserve">
-        <path opacity="0.2" fill="#000"
-            d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
-      s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
-      c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z" />
-        <path fill="#000" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
-      C22.32,8.481,24.301,9.057,26.013,10.047z">
-            <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 20 20" to="360 20 20"
-                dur="0.5s" repeatCount="indefinite" />
-        </path>
+<div class="loader loader--style1" *ngIf="(loadingService.fullLoading$ | async)" title="0">
+    <svg id="svg-sprite">
+        <symbol id="paw" viewBox="0 0 249 209.32">
+            <ellipse cx="27.917" cy="106.333" stroke-width="0" rx="27.917" ry="35.833" />
+            <ellipse cx="84.75" cy="47.749" stroke-width="0" rx="34.75" ry="47.751" />
+            <ellipse cx="162" cy="47.749" stroke-width="0" rx="34.75" ry="47.751" />
+            <ellipse cx="221.083" cy="106.333" stroke-width="0" rx="27.917" ry="35.833" />
+            <path stroke-width="0"
+                d="M43.98 165.39s9.76-63.072 76.838-64.574c0 0 71.082-6.758 83.096 70.33 0 0 2.586 19.855-12.54 31.855 0 0-15.75 17.75-43.75-6.25 0 0-7.124-8.374-24.624-7.874 0 0-12.75-.125-21.5 6.625 0 0-16.375 18.376-37.75 12.75 0 0-28.29-7.72-19.77-42.86z" />
+        </symbol>
     </svg>
+
+    <div class="ajax-loader">
+        <div class="paw"><svg class="icon">
+                <use xlink:href="#paw" />
+            </svg></div>
+        <div class="paw"><svg class="icon">
+                <use xlink:href="#paw" />
+            </svg></div>
+        <div class="paw"><svg class="icon">
+                <use xlink:href="#paw" />
+            </svg></div>
+        <div class="paw"><svg class="icon">
+                <use xlink:href="#paw" />
+            </svg></div>
+        <div class="paw"><svg class="icon">
+                <use xlink:href="#paw" />
+            </svg></div>
+        <div class="paw"><svg class="icon">
+                <use xlink:href="#paw" />
+            </svg></div>
+    </div>
 </div>
 
 <router-outlet></router-outlet>
