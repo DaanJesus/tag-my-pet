@@ -123,7 +123,7 @@ export class RegisterComponent implements AfterViewInit {
           this._snackBar.open(res.message, "X", {
             duration: 2000,
           });
-          this.switchMode();
+          /* this.switchMode(); */
           this.router.navigate(['/auth']); // Redireciona de volta para login após registro
         },
         error: (err) => {
