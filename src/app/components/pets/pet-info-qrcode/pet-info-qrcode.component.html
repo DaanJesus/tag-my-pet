@@ -20,13 +20,16 @@
                 <li><span>🚻</span> Gênero: {{ pet.sex }}</li>
                 <li><span>⚖️</span> Peso: {{ pet.weight }}kg</li>
                 <li><span>🎨</span> Pelo: {{ pet.furColor }}</li>
-                <li *ngIf="pet.medicalInfo">
-                    <span>🏥</span> Cuidados Especiais: {{ pet.medicalInfo }}
+                <li class="medical-info" *ngIf="pet.medicalInfo">
+                    <h4><span>🏥</span>Inforações Médicas</h4>
+                    <div class="medical-info-text">
+                        <p>{{ pet.medicalInfo }}</p>
+                    </div>
                 </li>
             </ul>
         </section>
 
-        <section class="owner-details">
+        <!-- <section class="owner-details">
             <h2>Owner Information</h2>
             <ul>
                 <li><span>🧑</span> Name: {{ owner.name }}</li>
@@ -34,7 +37,7 @@
                 <li><span>📧</span> Email: <a [href]="'mailto:' + owner.email">{{ owner.email }}</a></li>
                 <li><span>🏡</span> Address: {{ owner.address }}</li>
             </ul>
-        </section>
+        </section> -->
     </div>
 
     <!-- Footer Section -->

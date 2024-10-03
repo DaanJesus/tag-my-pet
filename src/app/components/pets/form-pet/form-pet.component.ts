@@ -51,7 +51,7 @@ export class FormPetComponent implements OnInit, AfterViewInit {
   breeds: string[] = []
   filteredBreeds: string[] = [];
 
-  currentStep = 6;
+  currentStep = 1;
   progressValue = 20;
 
   qrCodeUrl = ''
