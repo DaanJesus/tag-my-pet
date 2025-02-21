@@ -11,9 +11,6 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./mainlayout.component.css']
 })
 export class MainlayoutComponent implements OnInit, AfterViewInit {
-  title: string = '';
-  sub_title: string = '';
-
   user: any;
 
   constructor(
@@ -39,24 +36,9 @@ export class MainlayoutComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
 
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))  // Filtro para capturar o final da navegação
-      .subscribe(() => {
-        this.upgradePageTitle();
-      });
-
     this.authService.user$.subscribe(user => {
       this.user = user
     })
-  }
-
-  upgradePageTitle() {
-
-    const currentPage = this.router.url
-    const activeMenuItem = this.menu.find((item: { url: string; }) => item.url === currentPage);
-    this.title = activeMenuItem ? activeMenuItem.title : 'Início'
-    /* this.sub_title = activeMenuItem.sub_title */
-
   }
 
   logout() {

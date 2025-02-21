@@ -5,12 +5,12 @@ import { map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private tokenKey = 'authToken';
-  private userKey = 'authUser'
-  private apiUrl = `${environment.apiUrl}/auth`
+  private userKey = 'authUser';
+  private apiUrl = `${environment.apiUrl}/v1/auth`;
   private userSubject = new BehaviorSubject<any>(null);
   user$ = this.userSubject.asObservable();
 
@@ -19,15 +19,31 @@ export class AuthService {
   }
 
   // Registro de usuário
-  register(name: string, email: string, password: string, tag: string, photo: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, { name, email, password, tag, photo });
+  register(
+    name: string,
+    email: string,
+    password: string,
+    tag: string,
+    photo: any
+  ): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, {
+      name,
+      email,
+      password,
+      tag,
+      photo,
+    });
   }
 
   // Login de usuário
   login(email: string, password: string): Observable<any> {
-    return this.http.post<{ token: string, user: any }>(`${this.apiUrl}/login`, { email, password })
+    return this.http
+      .post<{ token: string; user: any }>(`${this.apiUrl}/login`, {
+        email,
+        password,
+      })
       .pipe(
-        tap(response => {
+        tap((response) => {
           this.storeToken(response.token, response.user); // Armazena o token
           this.userSubject.next(response.user); // Atualiza o usuário
         })
@@ -35,9 +51,7 @@ export class AuthService {
   }
 
   getCurrentUserId(): Observable<string | null> {
-    return this.user$.pipe(
-      map(user => user ? user._id : null)
-    );
+    return this.user$.pipe(map((user) => (user ? user._id : null)));
   }
 
   // Armazenar token no localStorage

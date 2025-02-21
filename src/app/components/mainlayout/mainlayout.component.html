@@ -1,64 +1,66 @@
 <div #body class="body">
-    <div class="mobile-screen">
-        <div class="menu">
-            <div class="menu__wrapper">
-                <header class="menu__header">
-                    <div class="user">
-                        <a class="user-profile" href="#">
-                            <img [src]="user.photo" class="avatar">
-                            <div class="user-info">
-                                <span class="user-name">{{user.name}}</span>
-                                <span class="user-handle">&#64;{{user.tag}}</span>
-                            </div>
-                        </a>
-                    </div>
-                    <button #closeBtn class="btn close-btn btn--dark"><i class='bx bx-x'></i></button>
-                </header>
-                <div class="options">
-                    <a class="options--item" *ngFor="let item of menu" routerLinkActive="active"
-                        [routerLink]="item.url">{{item.title}}</a>
-                    <a class="options--item" routerLinkActive="active" (click)="logout()">Sair</a>
-                </div>
-                <div class="socials">
-                    <ul class="socials__wrapper">
-                        <li><a class="btn btn--dark" href=""><i class='bx bxl-facebook'></i></a></li>
-                        <li><a class="btn btn--dark" href=""><i class='bx bxl-instagram'></i></a></li>
-                        <li><a class="btn btn--dark" href=""><i class='bx bxl-twitter'></i></a></li>
-                    </ul>
-                </div>
-            </div>
+  <div class="mobile-screen">
+    <div class="menu">
+      <div class="menu__wrapper">
+        <header class="menu__header">
+          <div class="user">
+            <a class="user-profile" href="#">
+              <img [src]="user.photo" class="avatar" />
+              <div class="user-info">
+                <span class="user-name">{{ user.name }}</span>
+                <span class="user-handle">&#64;{{ user.tag }}</span>
+              </div>
+            </a>
+          </div>
+          <button #closeBtn class="btn close-btn btn--dark">
+            <i class="bx bx-x"></i>
+          </button>
+        </header>
+        <div class="options">
+          <a
+            class="options--item"
+            *ngFor="let item of menu"
+            routerLinkActive="active"
+            [routerLink]="item.url"
+            >{{ item.title }}</a
+          >
+          <a class="options--item" routerLinkActive="active" (click)="logout()"
+            >Sair</a
+          >
         </div>
-        <div #main class="main">
-            <header class="main__header">
-                <span></span>
-                <button class="btn menu-btn "><i #menuBtn class='bx bx-menu-alt-left'></i></button>
-                <h1>Tag My Pet</h1>
-                <button class="btn notification-btn"><i class='bx bx-bell'></i></button>
-            </header>
-            <section>
-                <!-- <div class="card-header">
-                        <h2>{{title}}</h2>
-                        <h4 *ngIf="sub_title != ''">{{sub_title}}</h4>
-                    </div> -->
-                <router-outlet></router-outlet>
-            </section>
+        <div class="socials">
+          <ul class="socials__wrapper">
+            <li>
+              <a class="btn btn--dark" href=""
+                ><i class="bx bxl-facebook"></i
+              ></a>
+            </li>
+            <li>
+              <a class="btn btn--dark" href=""
+                ><i class="bx bxl-instagram"></i
+              ></a>
+            </li>
+            <li>
+              <a class="btn btn--dark" href=""
+                ><i class="bx bxl-twitter"></i
+              ></a>
+            </li>
+          </ul>
         </div>
-        <div class="trending">
-            <input class="search-box" type="search" placeholder="Buscar...">
-            <div>
-                <h3 class="trending-title">Em Alta</h3>
-                <div class="trending-item">
-                    <span class="avatar"></span>
-                    <div class="trending-content">
-                        <div class="username-section">
-                            <span class="username">Username</span>
-                            <span class="user-handle">username</span>
-                        </div>
-                        <p class="trending-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, et dolore
-                            magna aliqua. <a href="#">#hashtag</a></p>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+    <div #main class="main">
+      <header class="main__header">
+        <span></span>
+        <button class="btn menu-btn">
+          <i #menuBtn class="bx bx-menu-alt-left"></i>
+        </button>
+        <h1>Tag My Pet</h1>
+        <button class="btn notification-btn"><i class="bx bx-bell"></i></button>
+      </header>
+      <section>
+        <router-outlet></router-outlet>
+      </section>
+    </div>
+  </div>
 </div>
