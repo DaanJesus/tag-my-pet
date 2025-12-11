@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -24,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.tagmypet.ui.screens.home.Comment
+import com.tagmypet.data.model.Comment
 import com.tagmypet.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,6 +39,7 @@ fun CommentSheet(
 ) {
     val comments by viewModel.comments.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    val isLoadMoreLoading by viewModel.isLoadMoreLoading.collectAsState() // <-- NOVO
 
     var inputText by remember { mutableStateOf(TextFieldValue("")) }
     val focusRequester = remember { FocusRequester() }
@@ -45,8 +48,22 @@ fun CommentSheet(
     var parentCommentId by remember { mutableStateOf<String?>(null) }
     var parentCommentName by remember { mutableStateOf<String?>(null) }
 
+    // NOVO: Estado para rolagem da lista
+    val listState = rememberLazyListState()
+
     LaunchedEffect(postId) {
         viewModel.loadComments(postId)
+    }
+
+    // NOVO: Lógica de Infinite Scroll para Comentários Raiz
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+            .collect { lastIndex ->
+                // Carrega mais quando faltam 3 itens para o final
+                if (lastIndex != null && lastIndex >= comments.size - 3) {
+                    viewModel.loadMoreComments()
+                }
+            }
     }
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -102,6 +119,7 @@ fun CommentSheet(
                 }
             } else {
                 LazyColumn(
+                    state = listState, // <-- NOVO: Adiciona o estado para o Infinite Scroll
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth(),
@@ -120,8 +138,27 @@ fun CommentSheet(
                                     selection = androidx.compose.ui.text.TextRange(text.length)
                                 )
                                 focusRequester.requestFocus()
-                            }
+                            },
+                            onLoadMoreReplies = { id -> viewModel.loadMoreReplies(id) } // <-- NOVO
                         )
+                    }
+
+                    // Indicador de "Carregando Mais" no final da lista de comentários raiz
+                    if (isLoadMoreLoading) {
+                        item(key = "loading_more") {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(24.dp),
+                                    strokeWidth = 2.dp,
+                                    color = Primary600
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -257,6 +294,7 @@ fun CommentItem(
     comment: Comment,
     onProfileClick: (String) -> Unit,
     onReplyClick: (userName: String, commentId: String) -> Unit,
+    onLoadMoreReplies: (commentId: String) -> Unit, // <-- NOVO
 ) {
     // CORREÇÃO: Indentação fixa de 24.dp se o parentCommentId não for nulo (ou seja, se for uma resposta)
     val isReply = comment.parentCommentId != null
@@ -327,9 +365,31 @@ fun CommentItem(
                     CommentItem(
                         comment = reply,
                         onProfileClick = onProfileClick,
-                        onReplyClick = onReplyClick
+                        // Respostas de replies voltam ao pai do comment
+                        onReplyClick = { name, _ -> onReplyClick(name, comment.id) },
+                        onLoadMoreReplies = onLoadMoreReplies
                     )
                 }
+            }
+        }
+
+        // NOVO: BOTÃO "VER MAIS RESPOSTAS"
+        // Exibe se for um comentário raiz E houver mais replies no total do que as carregadas.
+        val loadedRepliesCount = comment.replies.size
+        val hasMoreReplies = comment.totalReplies > loadedRepliesCount
+
+        if (!isReply && hasMoreReplies) {
+            TextButton(
+                onClick = { onLoadMoreReplies(comment.id) },
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(start = 40.dp, top = 8.dp, bottom = 8.dp)
+            ) {
+                Text(
+                    "Ver mais respostas (${comment.totalReplies - loadedRepliesCount} restantes)",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Primary600
+                )
             }
         }
     }

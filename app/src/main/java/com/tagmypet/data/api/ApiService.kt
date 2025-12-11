@@ -133,7 +133,11 @@ interface ApiService {
 
     // --- COMENTÁRIOS (CRÍTICO) ---
     @GET("posts/{postId}/comments")
-    suspend fun getComments(@Path("postId") postId: String): Response<CommentsResponse>
+    suspend fun getComments(
+        @Path("postId") postId: String,
+        @Query("page") page: Int, // <-- ADICIONADO
+        @Query("limit") limit: Int, // <-- ADICIONADO
+    ): Response<CommentsResponse>
 
     // FUNÇÃO QUE ESTAVA FALTANDO
     @POST("posts/{postId}/comments")
@@ -217,7 +221,14 @@ data class PaymentIntentResponse(val clientSecret: String)
 data class SingleCommentResponse(val status: String, val data: SingleCommentData)
 data class SingleCommentData(val comment: ApiCommentDTO)
 
-data class CommentsResponse(val status: String, val results: Int, val data: CommentsData)
+data class CommentsResponse(
+    val status: String,
+    val results: Int,
+    val page: Int, // <-- ADICIONADO
+    val total: Int, // <-- ADICIONADO
+    val data: CommentsData,
+)
+
 data class CommentsData(val comments: List<ApiCommentDTO>)
 
 data class ApiCommentDTO(
@@ -226,6 +237,7 @@ data class ApiCommentDTO(
     val content: String,
     val createdAt: String,
     val parentComment: String?,
+    val repliesCount: Int? = 0, // <-- NOVO
     val replies: List<ApiCommentDTO>? = emptyList(),
 )
 

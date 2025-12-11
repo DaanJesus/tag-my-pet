@@ -2,10 +2,17 @@ package com.tagmypet.data.repository
 
 import com.tagmypet.data.api.ApiCommentDTO
 import com.tagmypet.data.api.ApiService
-import com.tagmypet.ui.screens.home.Comment
-import com.tagmypet.data.model.User
+import com.tagmypet.data.model.Comment
 import javax.inject.Inject
 import javax.inject.Singleton
+
+// Novo DTO para o resultado do getPostComments, incluindo a contagem total e página atual.
+data class PaginatedComments(
+    val comments: List<Comment>,
+    val totalComments: Int,
+    val currentPage: Int,
+    val limit: Int,
+)
 
 @Singleton
 class CommentRepository @Inject constructor(
@@ -20,7 +27,10 @@ class CommentRepository @Inject constructor(
             userAvatar = apiComment.author.photoUrl ?: "",
             text = apiComment.content,
             timeAgo = formatTimeAgo(apiComment.createdAt),
-            replies = apiComment.replies?.map(::mapApiCommentToUi) ?: emptyList()
+            replies = apiComment.replies?.map(::mapApiCommentToUi) ?: emptyList(),
+            parentCommentId = apiComment.parentComment,
+            // Usa o repliesCount do API DTO. Se for uma resposta (reply), ele será nulo ou 0.
+            totalReplies = apiComment.repliesCount ?: apiComment.replies?.size ?: 0
         )
     }
 
@@ -31,12 +41,25 @@ class CommentRepository @Inject constructor(
         return "Recente"
     }
 
-    suspend fun getPostComments(postId: String): Resource<List<Comment>> {
+    // Paginação para comentários raiz
+    suspend fun getPostComments(
+        postId: String,
+        page: Int,
+        limit: Int = 10,
+    ): Resource<PaginatedComments> {
         return try {
-            val response = apiService.getComments(postId)
+            val response = apiService.getComments(postId, page, limit)
             if (response.isSuccessful && response.body() != null) {
-                val comments = response.body()!!.data.comments.map(::mapApiCommentToUi)
-                Resource.Success(comments)
+                val body = response.body()!!
+                val comments = body.data.comments.map(::mapApiCommentToUi)
+                Resource.Success(
+                    PaginatedComments(
+                        comments = comments,
+                        totalComments = body.total,
+                        currentPage = body.page,
+                        limit = limit
+                    )
+                )
             } else {
                 Resource.Error("Erro ao carregar comentários")
             }
@@ -45,12 +68,27 @@ class CommentRepository @Inject constructor(
         }
     }
 
-    suspend fun getReplies(parentCommentId: String, page: Int): Resource<List<Comment>> {
+    // Paginação para respostas
+    suspend fun getReplies(
+        parentCommentId: String,
+        page: Int,
+        limit: Int = 5,
+    ): Resource<PaginatedComments> {
         return try {
-            val response = apiService.getReplies(parentCommentId, page)
+            // A API já usa limit=5 por padrão, mas passamos a página para controle
+            val response = apiService.getReplies(parentCommentId, page, limit)
             if (response.isSuccessful && response.body() != null) {
-                val replies = response.body()!!.data.replies.map(::mapApiCommentToUi)
-                Resource.Success(replies)
+                val body = response.body()!!
+                // Mapeamos as respostas. O total no body é o total de replies disponíveis no banco.
+                val replies = body.data.replies.map(::mapApiCommentToUi)
+                Resource.Success(
+                    PaginatedComments(
+                        comments = replies,
+                        totalComments = body.total,
+                        currentPage = body.page,
+                        limit = limit
+                    )
+                )
             } else {
                 Resource.Error("Erro ao carregar respostas.")
             }
