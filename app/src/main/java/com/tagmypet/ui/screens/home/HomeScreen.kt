@@ -12,6 +12,10 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi // <--- RESOLVE ERRO 2
+import androidx.compose.material.pullrefresh.PullRefreshIndicator // <--- RESOLVE ERRO 5
+import androidx.compose.material.pullrefresh.pullRefresh // <--- RESOLVE ERRO 1 e 4
+import androidx.compose.material.pullrefresh.rememberPullRefreshState // <--- RESOLVE ERRO 3
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
@@ -44,7 +48,11 @@ import com.tagmypet.ui.navigation.Screen
 import com.tagmypet.ui.theme.*
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterialApi::class
+) // <--- ONDE A ANOTAÇÃO É USADA
 @Composable
 fun HomeScreen(
     navController: NavController,
@@ -52,6 +60,7 @@ fun HomeScreen(
     onOpenDrawer: () -> Unit,
 ) {
     val feedItems by viewModel.feedItems.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState() // <--- Obtido o estado de loading
     val tabs = listOf("Feed", "Reels", "Comércios")
 
     val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -171,7 +180,8 @@ fun HomeScreen(
                         navController,
                         feedItems,
                         onCommentClick = { activeCommentPostId = it }, // Define o ID do post
-                        viewModel = viewModel
+                        viewModel = viewModel,
+                        isLoading = isLoading // <--- Passando o estado de loading
                     )
 
                     1 -> ReelsTab()
@@ -183,89 +193,120 @@ fun HomeScreen(
 }
 
 // --- TAB 1: FEED ---
+@OptIn(ExperimentalMaterialApi::class) // <--- Adicionado OptIn
 @Composable
 fun FeedTab(
     navController: NavController,
     feedItems: List<FeedItem>,
     onCommentClick: (String) -> Unit, // Agora recebe o ID do post
     viewModel: HomeViewModel,
+    isLoading: Boolean, // <--- Novo parâmetro
 ) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(bottom = 24.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+    // Problema 6: Configuração do Pull-to-Refresh
+    val refreshState = rememberPullRefreshState(
+        refreshing = isLoading,
+        onRefresh = { viewModel.loadFeed() }
+    )
+
+    Box( // <--- Box para o Pull-to-Refresh
+        modifier = Modifier
+            .fillMaxSize()
+            .pullRefresh(refreshState) // <--- Aplica o modificador
     ) {
-        // Header de Input
-        item(key = "header_input") {
-            Column(
-                modifier = Modifier.padding(
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = 16.dp,
-                    bottom = 8.dp
-                )
-            ) {
-                HomeInputSection(
-                    userAvatarUrl = "https://i.pravatar.cc/300?u=maria",
-                    onInputClick = { navController.navigate(Screen.CreatePost.route) }
-                )
-            }
-        }
-
-        // Stories
-        item(key = "stories_row") {
-            Column {
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(horizontal = 16.dp),
-                    modifier = Modifier.padding(bottom = 16.dp)
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(bottom = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            // Header de Input
+            item(key = "header_input") {
+                Column(
+                    modifier = Modifier.padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 16.dp,
+                        bottom = 8.dp
+                    )
                 ) {
-                    item(key = "story_commerces") {
-                        StoryItem(imageUrl = null, label = "Comércios", isSpecial = true)
+                    HomeInputSection(
+                        userAvatarUrl = "https://i.pravatar.cc/300?u=maria",
+                        onInputClick = { navController.navigate(Screen.CreatePost.route) }
+                    )
+                }
+            }
+
+            // Stories
+            item(key = "stories_row") {
+                Column {
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp),
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    ) {
+                        item(key = "story_commerces") {
+                            StoryItem(imageUrl = null, label = "Comércios", isSpecial = true)
+                        }
+                        items(6) { i ->
+                            StoryItem(
+                                imageUrl = "https://images.unsplash.com/photo-${1550000000000 + i * 100}?w=100&h=100&fit=crop",
+                                label = "Pet Shop ${i + 1}"
+                            )
+                        }
                     }
-                    items(6) { i ->
-                        StoryItem(
-                            imageUrl = "https://images.unsplash.com/photo-${1550000000000 + i * 100}?w=100&h=100&fit=crop",
-                            label = "Pet Shop ${i + 1}"
-                        )
+                    HorizontalDivider(color = BorderColor.copy(alpha = 0.5f))
+                }
+            }
+
+            // Lista Mista (Posts + Ads)
+            items(
+                feedItems,
+                key = { item -> // <--- Problema 1: Uso de 'key' para otimizar o scroll
+                    when (item) {
+                        is FeedItem.Post -> "post_${item.data.id}"
+                        is FeedItem.Ad -> "ad_${item.title}" // Chave para anúncios
                     }
                 }
-                HorizontalDivider(color = BorderColor.copy(alpha = 0.5f))
-            }
-        }
-
-        // Lista Mista (Posts + Ads)
-        items(feedItems) { item ->
-            Box(modifier = Modifier.padding(horizontal = 16.dp)) {
-                when (item) {
-                    is FeedItem.Post -> {
-                        PostCard(
-                            post = item.data,
-                            onLikeClick = { viewModel.toggleLike(item.data.id) },
-                            onCommentClick = { onCommentClick(item.data.id) },
-                            onProfileClick = { userId ->
-                                navController.navigate(Screen.PublicProfile.createRoute(userId))
-                            },
-                            onShareClick = { postId ->
-                                // Lógica de compartilhamento para o post (leva ao cartaz se for perdido)
-                                navController.navigate(Screen.PosterPreview.createRoute(postId))
-                            },
-                            onOptionClick = { option ->
-                                if (option == PostOption.SAVE) {
-                                    // TODO: Lógica de salvar bookmark
-                                } else if (option == PostOption.REPORT) {
-                                    // TODO: Lógica de denuncia
+            ) { item ->
+                Box(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    when (item) {
+                        is FeedItem.Post -> {
+                            PostCard(
+                                post = item.data,
+                                onLikeClick = { viewModel.toggleLike(item.data.id) },
+                                onCommentClick = { onCommentClick(item.data.id) },
+                                onProfileClick = { userId ->
+                                    navController.navigate(Screen.PublicProfile.createRoute(userId))
+                                },
+                                onShareClick = { postId ->
+                                    // Lógica de compartilhamento para o post (leva ao cartaz se for perdido)
+                                    navController.navigate(Screen.PosterPreview.createRoute(postId))
+                                },
+                                onOptionClick = { option ->
+                                    if (option == PostOption.SAVE) {
+                                        // TODO: Lógica de salvar bookmark
+                                    } else if (option == PostOption.REPORT) {
+                                        // TODO: Lógica de denuncia
+                                    }
                                 }
-                            }
-                        )
-                    }
+                            )
+                        }
 
-                    is FeedItem.Ad -> {
-                        AdMobNativePost()
+                        is FeedItem.Ad -> {
+                            AdMobNativePost()
+                        }
                     }
                 }
             }
         }
+
+        // Problema 6: Indicador de Pull-to-Refresh
+        PullRefreshIndicator(
+            refreshing = isLoading,
+            state = refreshState,
+            modifier = Modifier.align(Alignment.TopCenter),
+            backgroundColor = Surface,
+            contentColor = Primary600
+        )
     }
 }
 

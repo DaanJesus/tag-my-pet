@@ -53,13 +53,31 @@ fun ScanTagScreen(
         rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission(),
             onResult = { granted -> hasCameraPermission = granted })
 
+    // --- CORREÇÃO CRÍTICA DO FLUXO DE ERRO ---
     LaunchedEffect(navigateToError) {
         if (navigateToError) {
+            // Se navegar para a tela de erro, não precisamos chamar resetScan imediatamente aqui.
+            // O reset será chamado quando o usuário sair da tela de erro.
             navController.navigate(Screen.ScanError.route)
             viewModel.onNavigationHandled()
-            viewModel.resetScan()
         }
     }
+
+    // NOVO: Chamado quando o usuário retorna (popBackStack) para a tela.
+    // Garante que o estado de 'isScanning' volte para true.
+    DisposableEffect(navController) {
+        val observer = NavController.OnDestinationChangedListener { _, destination, _ ->
+            if (destination.route == Screen.Scan.route) {
+                // Ao retornar para esta tela, force o reset para reativar a câmera.
+                viewModel.resetScan()
+            }
+        }
+        navController.addOnDestinationChangedListener(observer)
+        onDispose {
+            navController.removeOnDestinationChangedListener(observer)
+        }
+    }
+    // ------------------------------------------
 
     LaunchedEffect(Unit) {
         permissionLauncher.launch(Manifest.permission.CAMERA)
@@ -100,17 +118,24 @@ fun ScanTagScreen(
             foundPet?.let { pet ->
                 FoundPetResultResponsive(pet = pet,
                     isOwner = isOwner,
+                    // Ao clicar em Reset (escanear outro), a câmera é reativada
                     onReset = { viewModel.resetScan() },
                     onChatClick = {
                         navController.navigate(Screen.Chat.createRoute(pet.ownerId))
                     })
             } ?: run {
                 if (hasCameraPermission) {
+                    // Se o scanner não estiver ativo E não estivermos carregando (indicador de erro)
                     if (isScanning) {
                         ScannerInterface(onBarcodeDetected = { code ->
                             viewModel.onBarcodeDetected(code)
                         })
+                    } else if (!isScanning && !navigateToError) {
+                        // Se não estiver escaneando, mas não está em erro (ou seja, está processando ou iniciando)
+                        CircularProgressIndicator(color = Primary600)
                     } else {
+                        // Se estiver em erro, mas o LaunchedEffect de erro não navegou ainda.
+                        // Manteremos o indicador de loading enquanto a tela de erro é montada
                         CircularProgressIndicator(color = Primary600)
                     }
                 } else {

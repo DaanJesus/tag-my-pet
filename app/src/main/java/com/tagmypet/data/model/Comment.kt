@@ -9,6 +9,6 @@ data class Comment(
     val timeAgo: String,
     val replies: List<Comment> = emptyList(),
     val parentCommentId: String? = null, // CORREÇÃO: Campo adicionado
-    val totalReplies: Int = 0, // <-- NOVO: Total de replies no banco
-    val nextReplyPage: Int = 2, // <-- NOVO: Próxima página a carregar (Inicialmente 2, pois a primeira página já foi pré-carregada (limit:2))
+    val totalReplies: Int = 0, // <-- Total de replies no banco
+    val nextReplyPage: Int = 1, // <-- CORREÇÃO: Deve iniciar em 1 (para o novo cálculo de skip)
 )

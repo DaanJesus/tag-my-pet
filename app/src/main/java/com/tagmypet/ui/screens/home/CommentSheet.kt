@@ -39,7 +39,7 @@ fun CommentSheet(
 ) {
     val comments by viewModel.comments.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
-    val isLoadMoreLoading by viewModel.isLoadMoreLoading.collectAsState() // <-- NOVO
+    val isLoadMoreLoading by viewModel.isLoadMoreLoading.collectAsState()
 
     var inputText by remember { mutableStateOf(TextFieldValue("")) }
     val focusRequester = remember { FocusRequester() }
@@ -91,7 +91,8 @@ fun CommentSheet(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Comentários (${comments.size})",
+                    // Mostra o total de comentários, se carregado. Caso contrário, apenas "Comentários"
+                    text = if (isLoading && comments.isEmpty()) "Comentários" else "Comentários (${comments.size})",
                     style = MaterialTheme.typography.titleMedium,
                     color = TextPrimary
                 )
@@ -99,7 +100,7 @@ fun CommentSheet(
             HorizontalDivider(color = BorderColor)
 
             // --- LISTA DE COMENTÁRIOS ---
-            if (isLoading) {
+            if (isLoading && comments.isEmpty()) {
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -188,14 +189,16 @@ fun CommentSheet(
                             )
                             // Botão para cancelar a resposta
                             IconButton(onClick = {
+                                // Limpa o estado de resposta
                                 parentCommentId = null
+                                // Garante que a remoção do @nome ocorra de forma segura
+                                val prefix = "@${parentCommentName} "
+                                inputText = if (inputText.text.startsWith(prefix)) {
+                                    inputText.copy(text = inputText.text.removePrefix(prefix))
+                                } else {
+                                    TextFieldValue(inputText.text)
+                                }
                                 parentCommentName = null
-                                inputText = TextFieldValue(
-                                    inputText.text.replace(
-                                        "@${parentCommentName} ",
-                                        ""
-                                    )
-                                )
                             }) {
                                 Icon(
                                     Icons.Default.Close,
@@ -257,8 +260,15 @@ fun CommentSheet(
                         val canSend = inputText.text.isNotBlank()
                         IconButton(
                             onClick = {
+                                // Antes de enviar, remove o @nome do input se estiver respondendo
+                                val contentToSend = if (parentCommentName != null) {
+                                    inputText.text.removePrefix("@${parentCommentName} ")
+                                } else {
+                                    inputText.text
+                                }
+
                                 viewModel.postComment(
-                                    content = inputText.text,
+                                    content = contentToSend,
                                     parentCommentId = parentCommentId
                                 )
                                 inputText = TextFieldValue("")
@@ -296,7 +306,8 @@ fun CommentItem(
     onReplyClick: (userName: String, commentId: String) -> Unit,
     onLoadMoreReplies: (commentId: String) -> Unit, // <-- NOVO
 ) {
-    // CORREÇÃO: Indentação fixa de 24.dp se o parentCommentId não for nulo (ou seja, se for uma resposta)
+    // CORREÇÃO: Aplica a indentação de 24.dp APENAS se for uma resposta (Level 2).
+    // Isto resolve o Problema 2 (Layout inconsistente e dupla indentação).
     val isReply = comment.parentCommentId != null
     val startPadding = if (isReply) 24.dp else 0.dp
 
@@ -358,12 +369,13 @@ fun CommentItem(
 
         // --- REPLIES (Exibição Aninhada) ---
         if (comment.replies.isNotEmpty()) {
-            // As respostas são exibidas com um padding extra
-            Column(modifier = Modifier.padding(start = 24.dp)) {
+            // O PADDING FOI REMOVIDO DA COLUNA ENVOLVENTE (Problema 2 fix)
+            Column { // A próxima chamada recursiva aplicará sua própria indentação se for uma resposta (isReply=true).
                 comment.replies.forEach { reply ->
-                    // Chamada recursiva para exibir a resposta (que agora sempre será Level 2)
+                    // Chamada recursiva para exibir a resposta.
+                    // Copiamos o comment.id como parentCommentId para garantir que o isReply seja true no próximo nível.
                     CommentItem(
-                        comment = reply,
+                        comment = reply.copy(parentCommentId = comment.id),
                         onProfileClick = onProfileClick,
                         // Respostas de replies voltam ao pai do comment
                         onReplyClick = { name, _ -> onReplyClick(name, comment.id) },
@@ -386,7 +398,7 @@ fun CommentItem(
                     .padding(start = 40.dp, top = 8.dp, bottom = 8.dp)
             ) {
                 Text(
-                    "Ver mais respostas (${comment.totalReplies - loadedRepliesCount} restantes)",
+                    "Mais respostas (${comment.totalReplies - loadedRepliesCount} restantes)",
                     style = MaterialTheme.typography.bodySmall,
                     color = Primary600
                 )

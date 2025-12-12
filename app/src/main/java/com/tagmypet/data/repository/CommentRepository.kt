@@ -3,6 +3,7 @@ package com.tagmypet.data.repository
 import com.tagmypet.data.api.ApiCommentDTO
 import com.tagmypet.data.api.ApiService
 import com.tagmypet.data.model.Comment
+import com.tagmypet.utils.DateUtils // <--- IMPORTADO
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -26,19 +27,12 @@ class CommentRepository @Inject constructor(
             userName = apiComment.author.name,
             userAvatar = apiComment.author.photoUrl ?: "",
             text = apiComment.content,
-            timeAgo = formatTimeAgo(apiComment.createdAt),
+            timeAgo = DateUtils.formatTimeAgo(apiComment.createdAt), // <--- USA DATE UTILS
             replies = apiComment.replies?.map(::mapApiCommentToUi) ?: emptyList(),
             parentCommentId = apiComment.parentComment,
             // Usa o repliesCount do API DTO. Se for uma resposta (reply), ele será nulo ou 0.
             totalReplies = apiComment.repliesCount ?: apiComment.replies?.size ?: 0
         )
-    }
-
-    // Função simples de formatação de tempo (implementação completa no Notification.kt)
-    private fun formatTimeAgo(iso: String): String {
-        // Implementação real da formatação, mas aqui usamos um placeholder
-        // O modelo Notification.kt já tem a lógica de tempo.
-        return "Recente"
     }
 
     // Paginação para comentários raiz

@@ -94,6 +94,9 @@ class CommentViewModel @Inject constructor(
         }
     }
 
+    /**
+     * PROBLEMA 3 CORRIGIDO: Mescla as novas respostas no array existente em vez de substituí-lo.
+     */
     fun loadMoreReplies(parentCommentId: String) {
         val targetComment = _comments.value.find { it.id == parentCommentId }
         val nextPage = targetComment?.nextReplyPage ?: return
@@ -102,7 +105,8 @@ class CommentViewModel @Inject constructor(
             // Não usamos o isLoadMoreLoading global aqui para não bloquear o scroll de root comments
             when (val result = repository.getReplies(parentCommentId, nextPage)) {
                 is Resource.Success -> {
-                    val newReplies = result.data?.comments ?: emptyList()
+                    val paginatedData = result.data
+                    val newReplies = paginatedData?.comments ?: emptyList()
                     val newNextPage = nextPage + 1
 
                     _comments.update { currentList ->
@@ -110,7 +114,8 @@ class CommentViewModel @Inject constructor(
                             currentList,
                             parentCommentId,
                             newReplies,
-                            newNextPage
+                            newNextPage,
+                            paginatedData?.totalComments ?: 0 // Passa o total real
                         )
                     }
                 }
@@ -123,21 +128,23 @@ class CommentViewModel @Inject constructor(
         }
     }
 
-    // Função auxiliar para injetar as novas respostas na árvore
+    // Função auxiliar para injetar as novas respostas na árvore (Imutável)
     private fun updateRepliesAndPagination(
         comments: List<Comment>,
         parentId: String,
         newReplies: List<Comment>,
         newNextPage: Int,
+        totalReplies: Int, // <--- Total real vindo da API
     ): List<Comment> {
         return comments.map { comment ->
             if (comment.id == parentId) {
-                // Junta as respostas existentes (pré-carregadas + já paginadas) com as novas
+                // Junta as respostas existentes com as novas
                 val updatedReplies = comment.replies + newReplies
-                // Atualiza o contador da próxima página
+                // Atualiza o contador da próxima página e o total de replies no objeto.
                 comment.copy(
                     replies = updatedReplies,
-                    nextReplyPage = newNextPage
+                    nextReplyPage = newNextPage,
+                    totalReplies = totalReplies // <--- Atualiza com o total real
                 )
             } else {
                 comment
@@ -158,10 +165,10 @@ class CommentViewModel @Inject constructor(
         return comments.map { comment ->
             if (comment.id == parentId) {
                 // 1. Encontrou o pai: Retorna uma cópia do pai com a nova resposta
-                // Note que também incrementamos o totalReplies (Atualização Otimista)
+                // Otimista: Incrementa o totalReplies no estado local.
                 comment.copy(
                     replies = comment.replies + newReply,
-                    totalReplies = comment.totalReplies + 1 // Otimista: Incrementa o contador
+                    totalReplies = comment.totalReplies + 1
                 )
             } else if (comment.replies.isNotEmpty()) {
                 // 2. Busca recursivamente nas respostas
@@ -169,6 +176,7 @@ class CommentViewModel @Inject constructor(
 
                 // Propaga a cópia apenas se a lista interna realmente mudou (essencial para Compose)
                 if (updatedReplies !== comment.replies) {
+                    // Se o reply é de um reply, ele deve atualizar o repliesCount do root
                     comment.copy(replies = updatedReplies)
                 } else {
                     comment
@@ -216,7 +224,7 @@ class CommentViewModel @Inject constructor(
             userName = authorJson.optString("name", "Usuário"),
             userAvatar = authorJson.optString("photoUrl", ""),
             text = json.optString("content", ""),
-            timeAgo = "Agora",
+            timeAgo = "Agora", // Não temos a data completa aqui, usamos placeholder
             replies = emptyList(),
             parentCommentId = json.optString("parentComment", null)
         )
@@ -224,6 +232,7 @@ class CommentViewModel @Inject constructor(
 
     /**
      * Função para enviar comentário/resposta com atualização OTIMISTA.
+     * Inclui a lógica para persistir o parentCommentId na resposta otimista.
      */
     fun postComment(content: String, parentCommentId: String? = null) {
         if (content.isBlank() || currentPostId.isBlank()) return
@@ -232,9 +241,9 @@ class CommentViewModel @Inject constructor(
             // Sem spinner para o usuário
             when (val result = repository.addComment(currentPostId, content, parentCommentId)) {
                 is Resource.Success -> {
-                    // ATUALIZAÇÃO OTIMISTA IMEDIATA (para quem postou):
+                    // ATUALIZAÇÃO OTIMISTA IMEDIATA:
                     result.data?.let { newComment ->
-                        // Garante que o parentId está no DTO para a inserção otimista
+                        // Garante que o parentId está no DTO de resposta da API para a inserção otimista
                         val commentToInsert =
                             if (parentCommentId != null && newComment.parentCommentId.isNullOrBlank()) {
                                 newComment.copy(parentCommentId = parentCommentId)
@@ -243,8 +252,10 @@ class CommentViewModel @Inject constructor(
                             }
 
                         if (commentToInsert.parentCommentId.isNullOrBlank()) {
+                            // Comentário Raiz
                             _comments.update { listOf(commentToInsert) + it }
                         } else {
+                            // Resposta (Usa a lógica recursiva que incrementa o contador)
                             _comments.update { currentList ->
                                 findAndAddNewReply(
                                     currentList,

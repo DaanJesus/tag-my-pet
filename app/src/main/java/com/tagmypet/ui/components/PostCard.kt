@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.tagmypet.ui.components.icons.PawIcon
 import com.tagmypet.ui.theme.*
+import com.tagmypet.utils.DateUtils // <--- IMPORTADO
+import com.tagmypet.utils.NumberUtils // <--- IMPORTADO
 
 // Enum movido para o topo
 enum class PostOption {
@@ -62,6 +64,12 @@ fun PostCard(
     )
 
     var showMenu by remember { mutableStateOf(false) }
+
+    // Formatações (Problema 4 e 5)
+    val formattedDate = remember(post.createdAt) { DateUtils.formatTimeAgo(post.createdAt) }
+    val formattedLikesCount = remember(post.likesCount) { NumberUtils.formatCount(post.likesCount) }
+    val formattedCommentsCount =
+        remember(post.commentsCount) { NumberUtils.formatCount(post.commentsCount) }
 
     Card(
         modifier = modifier
@@ -128,11 +136,20 @@ fun PostCard(
                         .weight(1f)
                         .clickable { onProfileClick(post.userId) }
                 ) {
-                    Text(
-                        text = post.userName,
-                        style = MaterialTheme.typography.labelLarge,
-                        color = TextPrimary
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) { // <--- CORRIGIDO: Agrupa nome e data
+                        Text(
+                            text = post.userName,
+                            style = MaterialTheme.typography.labelLarge,
+                            color = TextPrimary
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            // <--- PROBLEMA 4: Data ao lado do nome
+                            text = formattedDate,
+                            style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
+                            color = TextSecondary,
+                        )
+                    }
                     if (!post.location.isNullOrBlank()) {
                         Text(
                             text = post.location,
@@ -223,7 +240,7 @@ fun PostCard(
                 }
                 if (post.likesCount > 0) {
                     Text(
-                        text = "${post.likesCount}",
+                        text = formattedLikesCount, // <--- PROBLEMA 5: Formata Likes
                         style = MaterialTheme.typography.labelLarge,
                         color = TextPrimary,
                         modifier = Modifier.padding(start = 4.dp, end = 12.dp)
@@ -241,7 +258,7 @@ fun PostCard(
                 }
                 if (post.commentsCount > 0) {
                     Text(
-                        text = "${post.commentsCount}",
+                        text = formattedCommentsCount, // <--- PROBLEMA 5: Formata Comments
                         style = MaterialTheme.typography.labelLarge,
                         color = TextPrimary,
                         modifier = Modifier.padding(start = 4.dp)
@@ -283,13 +300,7 @@ fun PostCard(
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis
                 )
-
-                Text(
-                    text = post.createdAt,
-                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
-                    color = TextSecondary.copy(alpha = 0.7f),
-                    modifier = Modifier.padding(top = 4.dp)
-                )
+                // A data (createdAt) foi movida para o Header.
             }
         }
     }

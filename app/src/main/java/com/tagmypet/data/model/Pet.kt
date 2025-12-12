@@ -1,12 +1,12 @@
 package com.tagmypet.data.model
 
 import com.squareup.moshi.Json
-import com.tagmypet.data.adapter.PetOwnerId
+import com.tagmypet.data.adapter.PetOwnerId // <--- Importado para aplicar o Adapter
 
 data class Pet(
     // ID e Owner corrigidos para lerem String simples
     @Json(name = "_id") val id: String,
-    @Json(name = "owner") val ownerId: String,
+    @Json(name = "owner") @PetOwnerId val ownerId: String, // <--- CORREÇÃO CRÍTICA AQUI
 
     val name: String,
     val species: String = "Dog",

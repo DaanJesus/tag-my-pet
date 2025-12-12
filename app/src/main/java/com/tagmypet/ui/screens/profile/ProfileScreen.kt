@@ -37,6 +37,7 @@ import com.tagmypet.ui.theme.*
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import com.tagmypet.utils.NumberUtils // <--- IMPORTADO
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -238,7 +239,8 @@ fun ProfileScreen(
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     listOf(
-                        "Meus Dados", "Meus Pets (${pets.size})"
+                        "Meus Dados",
+                        "Meus Pets (${NumberUtils.formatCount(pets.size)})" // <--- USANDO NumberUtils
                     ).forEachIndexed { index, title ->
                         val isSelected = selectedTab == index
                         Box(modifier = Modifier
